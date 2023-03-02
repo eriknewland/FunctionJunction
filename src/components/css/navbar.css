@@ -1,0 +1,9 @@
+.switch.btn-outline-danger .switch-handle {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.switch.btn-outline-success .switch-handle {
+  background-color: #198754;
+  border-color: #198754;
+}

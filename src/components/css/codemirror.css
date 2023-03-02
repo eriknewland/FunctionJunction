@@ -1,0 +1,25 @@
+.test {
+  display: flex;
+  justify-content: space-between;
+}
+
+.result {
+  margin-left: auto
+}
+
+.cm-editor {
+  border-radius: 20px
+}
+
+.cm-gutters {
+  border-radius: 20px
+}
+
+.cm-scroller {
+  border-radius: 20px
+}
+
+.test {
+  font-family: monospace;
+  font-size: 32px;
+}

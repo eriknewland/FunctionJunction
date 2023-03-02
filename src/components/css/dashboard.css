@@ -1,0 +1,35 @@
+.gradient-custom {
+  /* fallback for old browsers */
+  background: #f6d365;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1));
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1))
+  }
+
+  .react-calendar-heatmap .color-empty { fill: whitesmoke; }
+  .react-calendar-heatmap .color-scale-1 { fill: #d6e685; }
+  .react-calendar-heatmap .color-scale-2 { fill: #8cc665; }
+  .react-calendar-heatmap .color-scale-3 { fill: #44a340; }
+  .react-calendar-heatmap .color-scale-4 { fill: #1e6823; }
+
+  /* body { min-height: 100vh } */
+
+  .calendar-container {
+    padding-top: 20px;
+  }
+
+  .react-calendar-heatmap-month-label {
+    font-size: .75rem;
+  }
+
+  .react-calendar-heatmap .react-calendar-heatmap-small-text {
+    font-size: 5px;
+  }
+
+  .react-calendar-heatmap rect:hover {
+    stroke: #555;
+    stroke-width: 1px;
+  }
