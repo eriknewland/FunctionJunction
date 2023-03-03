@@ -14,7 +14,7 @@ import BeepBoop from './background-images/login-background.mp4';
 import './css/style.css';
 import UpdateProfile from './updateProfile';
 import HomePage from './homePage';
-import Settings from './settings.jsx';
+import Settings from './settings';
 import PrivateHomePage from './privateHomePage';
 import Offers from './offers';
 import PairedInstance from './pairedInstance';

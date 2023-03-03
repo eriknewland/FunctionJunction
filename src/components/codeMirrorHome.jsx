@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import './css/codemirror.css';
 import CodeMirror from '@uiw/react-codemirror';
@@ -93,7 +95,6 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
           />
           <iframe
             title="idk"
-          // srcDoc={`<div className="test">${testData.funcTests[0]}<span className="result">${eval(`${srcDocValue}${testData.funcName}${testData.funcParams[0]}`)}</span></div>`}
             style={{
               height: '100px', width: '600px', border: '2px solid black', display: 'flex', margin: 'auto', background: 'whitesmoke', justifyContent: 'center', marginTop: '1rem', borderRadius: '20px',
             }}
