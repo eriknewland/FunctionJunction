@@ -6,7 +6,8 @@ import { loadLanguage } from '@uiw/codemirror-extensions-langs';
 // import logo from '../logo.svg';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import io from 'socket.io-client';
-import { Card } from 'react-bootstrap';
+import { Card, Modal, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import NavHeaderNoToggle from './navHeaderNoToggle';
 
 export default function CodeMirrorHomePage() {
@@ -14,8 +15,10 @@ export default function CodeMirrorHomePage() {
   const [testData, setTestData] = useState({
     funcName: 'sumFunction', funcSkeleton: 'const sumFunction = () => {};', funcTests: ['Testing sumFunction(5,5). Expecting 10: ', 'Testing sumFunction(-5,5). Expecting 0: ', 'Testing sumFunction(-5,-5). Expecting -10: '], funcParams: ['(5,5)', '(-5, 5)', '(-5, -5)'],
   });
-
+  const [problemSolved, setProblemSolved] = useState(false);
+  const [tracker, setTracker] = useState(0);
   const socket = io('http://localhost:8000');
+  const navigate = useNavigate();
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -26,14 +29,20 @@ export default function CodeMirrorHomePage() {
       setSrcDocValue(data);
     });
     socket.on('run-ide', (data) => {
-      console.log(data);
+      console.log(data.slice(data.indexOf('10'), data.indexOf('10') + 2));
       document.getElementById('myIframe').srcdoc = `${data}`;
+      if (data.slice(data.indexOf('10'), data.indexOf('10') + 2) === '10') {
+        setTimeout(() => {
+          setProblemSolved(true);
+          console.log('hello world');
+        }, 1000);
+      }
     });
     // socket.on('total-users-online', (data) => {
     //   console.log(`Total users online: ${data}`);
     //   // setTotalUsersOnline(data);
     // });
-  }, []);
+  }, [tracker]);
 
   const runIDE = () => {
     // const test = `${srcDocValue}sumFunction(5,5)`;
@@ -55,10 +64,16 @@ export default function CodeMirrorHomePage() {
     eval(test1) === 10 ? spans[0].style.color = 'green' : spans[0].style.color = 'red';
     eval(test2) === 0 ? spans[1].style.color = 'green' : spans[1].style.color = 'red';
     eval(test3) === -10 ? spans[2].style.color = 'green' : spans[2].style.color = 'red';
+    /* DEMO DAY CODE */
+    // eval(test1) === 10 ? setProblemSolved(true) : setProblemSolved(false);
+    setTracker(Math.random() * 10);
+    /* DEMO DAY CODE */
     iframe.contentWindow.document.body.style.fontFamily = 'monospace';
     iframe.contentWindow.document.close();
     socket.emit('run-ide', document.getElementById('myIframe').srcdoc = `<style>span { font-family: monospace; color: ${eval(`${srcDocValue}${testData.funcName}${testData.funcParams[0]}`) === 10 ? 'green' : 'red'}; float: right; } div { font-family: monospace; margin: 10px;}</style><div>Testing sumFunction(5,5). Expecting 10: <span>${eval(test1)}</span></div><div>Testing sumFunction(-5,5). Expecting 0: <span>${eval(test2)}</span></div><div>Testing sumFunction(-5,-5). Expecting -10: <span>${eval(test3)}</span></div>`);
   };
+
+  const handleClose = () => navigate('/');
 
   return (
     <>
@@ -99,6 +114,16 @@ export default function CodeMirrorHomePage() {
           </button>
         </Card.Body>
       </Card>
+      <Modal show={problemSolved} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Congrats! Awesome teamwork!</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleClose}>
+            Return Home
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
