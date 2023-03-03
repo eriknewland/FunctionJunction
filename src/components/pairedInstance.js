@@ -28,6 +28,10 @@ export default function CodeMirrorHomePage() {
       console.log(data);
       document.getElementById('myIframe').srcdoc = `${data}`;
     });
+    // socket.on('total-users-online', (data) => {
+    //   console.log(`Total users online: ${data}`);
+    //   // setTotalUsersOnline(data);
+    // });
   }, []);
 
   const runIDE = () => {
@@ -63,7 +67,7 @@ export default function CodeMirrorHomePage() {
       }}
       >
         <Card.Body>
-          <h2>Sandbox</h2>
+          <h2>Problem 001: SumFunction</h2>
           <CodeMirror
             value={srcDocValue}
             height="400px"

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import NavHeader from './navHeader';
 import CodeMirrorHomePage from './codeMirrorHome';
 
 export default function HomePage() {
+  const [qeued, setQeued] = useState(false);
   return (
     <>
       {/* <div className="container-fluid p-5">
@@ -15,8 +16,8 @@ export default function HomePage() {
           </button>
         </div>
       </div> */}
-      <NavHeader />
-      <CodeMirrorHomePage />
+      <NavHeader qeued={qeued} setQeued={setQeued} />
+      <CodeMirrorHomePage qeued={qeued} setQeued={setQeued} />
     </>
   );
 }

@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 library.add(faX);
 
-export default function NavHeader() {
+export default function NavHeader({ qeued, setQeued }) {
   const [showAdvertisement, setShowAdvertisement] = useState(true);
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ export default function NavHeader() {
             offstyle="outline-danger"
             offlabel="Idle"
             onlabel="Ready!"
-            onChange={() => navigate('/dashboard')}
+            onChange={() => setQeued(!qeued)}
             width={100}
           />
         </Nav>

@@ -5,15 +5,17 @@ import { loadLanguage } from '@uiw/codemirror-extensions-langs';
 // import logo from '../logo.svg';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import io from 'socket.io-client';
-import { Card } from 'react-bootstrap';
+import { Card, Modal, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
-export default function CodeMirrorHomePage() {
+export default function CodeMirrorHomePage({ qeued, setQeued }) {
   const [srcDocValue, setSrcDocValue] = useState('//Create a function that adds two numbers together\nconst sumFunction = () => {};');
   const [testData, setTestData] = useState({
     funcName: 'sumFunction', funcSkeleton: 'const sumFunction = () => {};', funcTests: ['Testing sumFunction(5,5). Expecting 10: ', 'Testing sumFunction(-5,5). Expecting 0: ', 'Testing sumFunction(-5,-5). Expecting -10: '], funcParams: ['(5,5)', '(-5, 5)', '(-5, -5)'],
   });
-  const [demoDay, setDemoDay] = useState(false);
-
+  const [show, setShow] = useState(false);
+  const [totalUsersOnline, setTotalUsersOnline] = useState(0);
+  const navigate = useNavigate();
   const socket = io('http://localhost:8000');
 
   useEffect(() => {
@@ -27,14 +29,23 @@ export default function CodeMirrorHomePage() {
     socket.on('run-ide', (data) => {
       console.log(data);
       document.getElementById('myIframe').srcdoc = `${data}`;
-      // if (!demoDay) {
-      //   setDemoDay(!demoDay);
-      //   document.getElementById('myIframe').srcdoc = `<style>span { font-family: monospace; color: ${eval(`${srcDocValue}${testData.funcName}${testData.funcParams[0]}`) === 10 ? 'green' : 'red'}; float: right; } div { font-family: monospace; margin: 10px; }</style><div>Testing sumFunction(5,5). Expecting 10: <span>10</span></div><div>Testing sumFunction(-5,5). Expecting 0: <span>0</span></div><div>Testing sumFunction(-5,-5). Expecting -10: <span>-10</span></div>`;
-      // } else {
-      //   document.getElementById('myIframe').srcdoc = `<style>span { font-family: monospace; color: ${eval(`${srcDocValue}${testData.funcName}${testData.funcParams[0]}`) === 10 ? 'green' : 'red'}; float: right; } div { font-family: monospace; margin: 10px; }</style><div>Testing sumFunction(5,5). Expecting 10: <span>0</span></div><div>Testing sumFunction(-5,5). Expecting 0: <span>-10</span></div><div>Testing sumFunction(-5,-5). Expecting -10: <span>0</span></div>`;
-      // }
     });
-  }, []);
+    socket.on('total-users-online', (data) => {
+      console.log(`Total users online: ${data}`);
+      setTotalUsersOnline(data);
+    });
+    setTimeout(() => {
+      if (totalUsersOnline >= 2 && qeued) {
+        setShow(true);
+      }
+    }, 2000);
+  }, [qeued]);
+
+  const handleClose = () => setShow(false);
+  const handleYes = () => {
+    setShow(false);
+    navigate('/paired-instance');
+  };
 
   const runIDE = () => {
     // const test = `${srcDocValue}sumFunction(5,5)`;
@@ -62,42 +73,57 @@ export default function CodeMirrorHomePage() {
   };
 
   return (
-    <Card style={{
-      backgroundColor: 'rgba(251, 251, 251, 0.5)', marginTop: '5rem', minWidth: '600px', minHeight: '600px',
-    }}
-    >
-      <Card.Body>
-        <h2>Sandbox</h2>
-        <CodeMirror
-          value={srcDocValue}
-          height="400px"
-          width="600px"
-          theme={dracula}
-          extensions={[loadLanguage('javascript')]}
-          onChange={(value) => {
-            setSrcDocValue(value);
-            socket.emit('code-collab', value);
-          }}
-        />
-        <iframe
-          title="idk"
+    <>
+      <Card style={{
+        backgroundColor: 'rgba(251, 251, 251, 0.5)', marginTop: '5rem', minWidth: '600px', minHeight: '600px',
+      }}
+      >
+        <Card.Body>
+          <h2>Sandbox</h2>
+          <CodeMirror
+            value={srcDocValue}
+            height="400px"
+            width="600px"
+            theme={dracula}
+            extensions={[loadLanguage('javascript')]}
+            onChange={(value) => {
+              setSrcDocValue(value);
+              socket.emit('code-collab', value);
+            }}
+          />
+          <iframe
+            title="idk"
           // srcDoc={`<div className="test">${testData.funcTests[0]}<span className="result">${eval(`${srcDocValue}${testData.funcName}${testData.funcParams[0]}`)}</span></div>`}
-          style={{
-            height: '100px', width: '600px', border: '2px solid black', display: 'flex', margin: 'auto', background: 'whitesmoke', justifyContent: 'center', marginTop: '1rem', borderRadius: '20px',
-          }}
-          id="myIframe"
-        />
-        <button
-          className="btn btn-warning"
-          style={{
-            flexDirection: 'column', display: 'flex', width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginTop: '0.75rem',
-          }}
-          type="button"
-          onClick={runIDE}
-        >
-          Click to run your function
-        </button>
-      </Card.Body>
-    </Card>
+            style={{
+              height: '100px', width: '600px', border: '2px solid black', display: 'flex', margin: 'auto', background: 'whitesmoke', justifyContent: 'center', marginTop: '1rem', borderRadius: '20px',
+            }}
+            id="myIframe"
+          />
+          <button
+            className="btn btn-warning"
+            style={{
+              flexDirection: 'column', display: 'flex', width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginTop: '0.75rem',
+            }}
+            type="button"
+            onClick={runIDE}
+          >
+            Click to run your function
+          </button>
+        </Card.Body>
+      </Card>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Match found! Ready?</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleYes}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
