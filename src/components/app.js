@@ -14,8 +14,10 @@ import BeepBoop from './background-images/login-background.mp4';
 import './css/style.css';
 import UpdateProfile from './updateProfile';
 import HomePage from './homePage';
-import Settings from './settings';
+import Settings from './settings.jsx';
 import PrivateHomePage from './privateHomePage';
+import Offers from './offers';
+import PairedInstance from './pairedInstance';
 
 export default function App() {
   return (
@@ -56,6 +58,22 @@ export default function App() {
                 element={(
                   <PrivateHomePage>
                     <HomePage />
+                  </PrivateHomePage>
+                )}
+              />
+              <Route
+                path="/paired-instance"
+                element={(
+                  <PrivateHomePage>
+                    <PairedInstance />
+                  </PrivateHomePage>
+                )}
+              />
+              <Route
+                path="/offers"
+                element={(
+                  <PrivateHomePage>
+                    <Offers />
                   </PrivateHomePage>
                 )}
               />

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import './css/navbar.css';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -9,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 library.add(faX);
 
-export default function NavHeader() {
+export default function NavHeaderNoToggle() {
   const [showAdvertisement, setShowAdvertisement] = useState(true);
   const navigate = useNavigate();
 
@@ -34,14 +33,6 @@ export default function NavHeader() {
           <Nav.Link href="/offers">Go Pro Today!</Nav.Link>
           <Nav.Link href="/dashboard">Dashboard</Nav.Link>
           <Nav.Link href="/settings">Settings</Nav.Link>
-          <BootstrapSwitchButton
-            onstyle="outline-success"
-            offstyle="outline-danger"
-            offlabel="Idle"
-            onlabel="Ready!"
-            onChange={() => navigate('/dashboard')}
-            width={100}
-          />
         </Nav>
       </Navbar>
       {showAdvertisement

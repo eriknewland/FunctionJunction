@@ -7,3 +7,17 @@
   background-color: #198754;
   border-color: #198754;
 }
+
+
+.time {
+  animation: time 1s linear;
+}
+
+@keyframes time {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
