@@ -42,7 +42,7 @@ export default function Settings() {
           {/* <input style={{ display: 'flex', margin: 'auto' }} type="checkbox" />
         <p style={{ display: 'flex', margin: 'auto' }}>Disable Background MP4</p> */}
           <label style={{ margin: 'auto', marginRight: '1rem' }} htmlFor="cb01">Disable Background MP4</label>
-          <input defaultChecked type="checkbox" id="cb01" />
+          <input className="toggle-background" defaultChecked type="checkbox" id="cb01" />
         </div>
         <Card.Body>
           <Form>

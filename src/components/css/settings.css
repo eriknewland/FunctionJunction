@@ -1,8 +1,8 @@
-input, label {
+.toggle-background, label {
 	cursor: pointer;
 }
 
-input {
+.toggle-background {
 	display: flex;
 	appearance: none;
 	box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.2) inset, 0 1px 1px 1px rgba(255, 255, 255, 0.2);
@@ -12,8 +12,8 @@ input {
 	background-blend-mode: soft-light;
 }
 
-input::before,
-input::after {
+.toggle-background::before,
+.toggle-background::after {
 	display: flex;
 	position: relative;
 	font-size: 1.25rem;
@@ -21,42 +21,44 @@ input::after {
 	margin: .5rem;
 }
 
-input::before {
+.toggle-background::before {
 	content: 'Off';
 }
 
-input::after {
+.toggle-background::after {
 	content: 'On';
 }
 
-input:not(:checked) {
+.toggle-background:not(:checked) {
 	background-position: 0 0;
 	transition: all 250ms ease-out;
 }
 
-input:not(:checked)::before {
+.toggle-background:not(:checked)::before {
 	color: #FC9;
 	text-shadow: 2px 3px 2px rgba(0,0,0,.25);
 	transition: all 75ms ease-in 100ms;
 }
 
-input:not(:checked)::after {
+.toggle-background:not(:checked)::after {
 	color: rgba(255, 255, 255, 0.4);
 	transition: all 75ms ease-in 100ms;
 }
 
-input:checked {
+.toggle-background:checked {
 	background-position: 100% 0;
 	transition: all 150ms ease-in;
 }
 
-input:checked::before {
+.toggle-background:checked::before {
 	color: rgba(255, 255, 255, 0.4);
 	transition: all 75ms ease-in 100ms;
 }
 
-input:checked::after {
+.toggle-background:checked::after {
 	color: #9FC;
 	text-shadow: 2px 3px 2px rgba(0,0,0,.25);
 	transition: all 75ms ease-in 100ms;
 }
+
+

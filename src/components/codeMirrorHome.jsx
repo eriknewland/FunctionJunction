@@ -27,7 +27,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
     });
     socket.on('code-collab', (data) => {
       // console.log(data);
-      setSrcDocValue(data);
+      setSrcDocValue(data); // consider removing this line
     });
     socket.on('run-ide', (data) => {
       console.log(data);

@@ -7,12 +7,13 @@ import { loadLanguage } from '@uiw/codemirror-extensions-langs';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import io from 'socket.io-client';
 import {
-  Card, Modal, Button, Alert,
+  Card, Modal, Button, Alert, Row,
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Fireworks } from '@fireworks-js/react';
 import NavHeaderNoToggle from './navHeaderNoToggle';
+import ChatRoom from './chatroom';
 
 export default function CodeMirrorHomePage() {
   const [srcDocValue, setSrcDocValue] = useState('//Create a function that adds two numbers together\nconst sumFunction = () => {};');
@@ -88,14 +89,15 @@ export default function CodeMirrorHomePage() {
   return (
     <>
       <NavHeaderNoToggle />
-      <Card style={{
-        backgroundColor: 'rgba(251, 251, 251, 0.5)', marginTop: '5rem', minWidth: '600px', minHeight: '600px',
-      }}
-      >
-        <Card.Body>
-          <div style={{ display: 'flex' }}>
-            <h2>Problem 001: SumFunction</h2>
-            {problemSolved === false
+      <Row>
+        <Card style={{
+          backgroundColor: 'rgba(251, 251, 251, 0.5)', marginTop: '5rem', minWidth: '600px', minHeight: '600px', borderRadius: '20px',
+        }}
+        >
+          <Card.Body>
+            <div style={{ display: 'flex' }}>
+              <h2>Problem 001: SumFunction</h2>
+              {problemSolved === false
    && (
    <Alert
      variant="danger"
@@ -106,38 +108,44 @@ export default function CodeMirrorHomePage() {
      Close! Please try again
    </Alert>
    )}
-          </div>
-          <CodeMirror
-            value={srcDocValue}
-            height="400px"
-            width="600px"
-            theme={dracula}
-            extensions={[loadLanguage('javascript')]}
-            onChange={(value) => {
-              setSrcDocValue(value);
-              socket.emit('code-collab', value);
-            }}
-          />
-          <iframe
-            title="idk"
-            style={{
-              height: '100px', width: '600px', border: '2px solid black', display: 'flex', margin: 'auto', background: 'whitesmoke', justifyContent: 'center', marginTop: '1rem', borderRadius: '20px',
-            }}
-            id="myIframe"
-          />
-          <button
-            className="btn btn-warning"
-            style={{
-              flexDirection: 'column', display: 'flex', width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginTop: '0.75rem',
-            }}
-            type="button"
-            onClick={runIDE}
-          >
-            Click to run your function
-          </button>
-
-        </Card.Body>
-      </Card>
+            </div>
+            <CodeMirror
+              value={srcDocValue}
+              height="400px"
+              width="600px"
+              theme={dracula}
+              extensions={[loadLanguage('javascript')]}
+              onChange={(value) => {
+                setSrcDocValue(value);
+                socket.emit('code-collab', value);
+              }}
+            />
+            <iframe
+              title="idk"
+              style={{
+                height: '100px', width: '600px', border: '2px solid black', display: 'flex', margin: 'auto', background: 'whitesmoke', justifyContent: 'center', marginTop: '1rem', borderRadius: '20px',
+              }}
+              id="myIframe"
+            />
+            <button
+              className="btn btn-warning"
+              style={{
+                flexDirection: 'column', display: 'flex', width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginTop: '0.75rem',
+              }}
+              type="button"
+              onClick={runIDE}
+            >
+              Click to run your function
+            </button>
+          </Card.Body>
+        </Card>
+        <div style={{
+          position: 'absolute', top: '89px', width: '250px', left: '-5px', marginLeft: '2rem',
+        }}
+        >
+          <ChatRoom />
+        </div>
+      </Row>
       <Modal show={problemSolved} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Congrats! Awesome teamwork!</Modal.Title>

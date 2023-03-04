@@ -28,6 +28,11 @@ io.on('connect', (socket) => {
     socket.broadcast.emit('run-ide', data);
     // socket.emit('total-users-online', totalUsersOnline.length);
   });
+
+  socket.on('message', (data) => {
+    socket.broadcast.emit('message', data);
+    console.log(data);
+  });
 });
 
 // Express Routes

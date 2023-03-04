@@ -21,6 +21,7 @@
     "firebase": "^9.17.1",
     "firebase-admin": "^11.5.0",
     "framer-motion": "^10.0.1",
+    "python-shell": "^5.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-calendar": "^4.0.0",
