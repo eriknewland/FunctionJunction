@@ -6,8 +6,12 @@ import { loadLanguage } from '@uiw/codemirror-extensions-langs';
 // import logo from '../logo.svg';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import io from 'socket.io-client';
-import { Card, Modal, Button } from 'react-bootstrap';
+import {
+  Card, Modal, Button, Alert,
+} from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Fireworks } from '@fireworks-js/react';
 import NavHeaderNoToggle from './navHeaderNoToggle';
 
 export default function CodeMirrorHomePage() {
@@ -15,7 +19,8 @@ export default function CodeMirrorHomePage() {
   const [testData, setTestData] = useState({
     funcName: 'sumFunction', funcSkeleton: 'const sumFunction = () => {};', funcTests: ['Testing sumFunction(5,5). Expecting 10: ', 'Testing sumFunction(-5,5). Expecting 0: ', 'Testing sumFunction(-5,-5). Expecting -10: '], funcParams: ['(5,5)', '(-5, 5)', '(-5, -5)'],
   });
-  const [problemSolved, setProblemSolved] = useState(false);
+  const [problemSolved, setProblemSolved] = useState(null);
+  const [problemSolved2, setProblemSolved2] = useState(false);
   const [tracker, setTracker] = useState(0);
   const socket = io('http://localhost:8000');
   const navigate = useNavigate();
@@ -29,20 +34,25 @@ export default function CodeMirrorHomePage() {
       setSrcDocValue(data);
     });
     socket.on('run-ide', (data) => {
-      console.log(data.slice(data.indexOf('10'), data.indexOf('10') + 2));
+      const regex = /<span>10<\/span>/;
+      const match = data.match(regex);
+      console.log(match);
+
+      console.log(tracker);
       document.getElementById('myIframe').srcdoc = `${data}`;
-      if (data.slice(data.indexOf('10'), data.indexOf('10') + 2) === '10') {
+      if (match) {
         setTimeout(() => {
           setProblemSolved(true);
-          console.log('hello world');
-        }, 1000);
+        }, 500);
       }
+      setProblemSolved(false);
+      // match ? setProblemSolved(true) : setProblemSolved(false);
     });
     // socket.on('total-users-online', (data) => {
     //   console.log(`Total users online: ${data}`);
     //   // setTotalUsersOnline(data);
     // });
-  }, [tracker]);
+  }, []);
 
   const runIDE = () => {
     // const test = `${srcDocValue}sumFunction(5,5)`;
@@ -66,7 +76,7 @@ export default function CodeMirrorHomePage() {
     eval(test3) === -10 ? spans[2].style.color = 'green' : spans[2].style.color = 'red';
     /* DEMO DAY CODE */
     // eval(test1) === 10 ? setProblemSolved(true) : setProblemSolved(false);
-    setTracker(Math.random() * 10);
+
     /* DEMO DAY CODE */
     iframe.contentWindow.document.body.style.fontFamily = 'monospace';
     iframe.contentWindow.document.close();
@@ -83,7 +93,20 @@ export default function CodeMirrorHomePage() {
       }}
       >
         <Card.Body>
-          <h2>Problem 001: SumFunction</h2>
+          <div style={{ display: 'flex' }}>
+            <h2>Problem 001: SumFunction</h2>
+            {problemSolved === false
+   && (
+   <Alert
+     variant="danger"
+     style={{
+       width: '200px', height: '30px', margin: 'auto', padding: '0', textAlign: 'center',
+     }}
+   >
+     Close! Please try again
+   </Alert>
+   )}
+          </div>
           <CodeMirror
             value={srcDocValue}
             height="400px"
@@ -112,6 +135,7 @@ export default function CodeMirrorHomePage() {
           >
             Click to run your function
           </button>
+
         </Card.Body>
       </Card>
       <Modal show={problemSolved} onHide={handleClose}>
@@ -122,6 +146,27 @@ export default function CodeMirrorHomePage() {
           <Button variant="success" onClick={handleClose}>
             Return Home
           </Button>
+          <div style={{}}>
+            <Fireworks
+              options={{
+                rocketsPoint: {
+                  min: 0,
+                  max: 100,
+                },
+              }}
+              style={{
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                position: 'fixed',
+                background: '#000',
+                zIndex: '-1',
+                opacity: '0.5',
+              }}
+            />
+          </div>
+
         </Modal.Footer>
       </Modal>
     </>
