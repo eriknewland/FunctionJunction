@@ -1,11 +1,33 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { updateEmail, updatePassword } from 'firebase/auth';
+import { updateEmail, updatePassword, updateProfile } from 'firebase/auth';
+import {
+  getDownloadURL, getStorage, ref, uploadBytes,
+} from 'firebase/storage';
 import { auth } from '../firebase';
 
 const AuthContext = React.createContext();
+const storage = getStorage();
 
 export function useAuth() {
   return useContext(AuthContext);
+}
+
+export async function upload(file, currentUser, setLoading) {
+  const fileRef = ref(storage, `${currentUser.currentUser.uid}.png`);
+
+  setLoading(true);
+  // const metadata = {
+  //   contentType: 'image/png',
+  // };
+
+  const snapshot = await uploadBytes(fileRef, file);
+  const photoURL = await getDownloadURL(fileRef);
+  console.log(photoURL);
+
+  updateProfile(currentUser.currentUser, { photoURL });
+
+  setLoading(false);
+  alert('Uploaded file!');
 }
 
 // eslint-disable-next-line react/prop-types

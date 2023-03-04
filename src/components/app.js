@@ -18,6 +18,7 @@ import Settings from './settings';
 import PrivateHomePage from './privateHomePage';
 import Offers from './offers';
 import PairedInstance from './pairedInstance';
+import PhotoUpload from './photoUpload';
 
 export default function App() {
   return (
@@ -82,6 +83,14 @@ export default function App() {
                 element={(
                   <PrivateRoute>
                     <Settings />
+                  </PrivateRoute>
+                )}
+              />
+              <Route
+                path="/photo-upload"
+                element={(
+                  <PrivateRoute>
+                    <PhotoUpload />
                   </PrivateRoute>
                 )}
               />
