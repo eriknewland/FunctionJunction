@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useState } from 'react';
 import {
   Card, Button, Alert, Nav, Navbar,
@@ -29,6 +30,7 @@ export default function Dashboard() {
     }
   }
 
+  // eslint-disable-next-line no-unused-vars
   async function closeDashboard() {
     setError('');
 

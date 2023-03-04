@@ -20,6 +20,7 @@ export async function upload(file, currentUser, setLoading) {
   //   contentType: 'image/png',
   // };
 
+  // eslint-disable-next-line no-unused-vars
   const snapshot = await uploadBytes(fileRef, file);
   const photoURL = await getDownloadURL(fileRef);
   console.log(photoURL);

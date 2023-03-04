@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
@@ -11,7 +12,7 @@ import { Card, Modal, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 export default function CodeMirrorHomePage({ qeued, setQeued }) {
-  const [srcDocValue, setSrcDocValue] = useState('//Create a function that adds two numbers together\nconst sumFunction = () => {};');
+  const [srcDocValue, setSrcDocValue] = useState('//Play in the sandbox between problems!');
   const [testData, setTestData] = useState({
     funcName: 'sumFunction', funcSkeleton: 'const sumFunction = () => {};', funcTests: ['Testing sumFunction(5,5). Expecting 10: ', 'Testing sumFunction(-5,5). Expecting 0: ', 'Testing sumFunction(-5,-5). Expecting -10: '], funcParams: ['(5,5)', '(-5, 5)', '(-5, -5)'],
   });
@@ -49,29 +50,39 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
     navigate('/paired-instance');
   };
 
+  //= == ORIGINAL FUNCTION ===//
+  // const runIDE = () => {
+  //   // const test = `${srcDocValue}sumFunction(5,5)`;
+  //   const test1 = `${srcDocValue}${testData.funcName}${testData.funcParams[0]}`;
+  //   const test2 = `${srcDocValue}${testData.funcName}${testData.funcParams[1]}`;
+  //   const test3 = `${srcDocValue}${testData.funcName}${testData.funcParams[2]}`;
+  //   const iframe = document.getElementById('myIframe');
+  //   iframe.contentWindow.document.open();
+  //   /* eslint-disable no-eval */
+  //   // iframe.contentWindow.document.write(`Testing sumFunction(5,5):${eval(test)}`);
+  //   iframe.contentWindow.document.write(`<div className="test">${testData.funcTests[0]}<span className="result">${eval(test1)}</span></div>`);
+  //   iframe.contentWindow.document.write(`<p className="test">${testData.funcTests[1]}<span className="result">${eval(test2)}</span></p>`);
+  //   iframe.contentWindow.document.write(`<p className="test">${testData.funcTests[2]}<span className="result">${eval(test3)}</span></p>`);
+  //   const spans = iframe.contentWindow.document.getElementsByTagName('span');
+  //   for (let i = 0; i < spans.length; i += 1) {
+  //     spans[i].style.float = 'right';
+  //   }
+  //   /* eslint-disable no-unused-expressions */
+  //   eval(test1) === 10 ? spans[0].style.color = 'green' : spans[0].style.color = 'red';
+  //   eval(test2) === 0 ? spans[1].style.color = 'green' : spans[1].style.color = 'red';
+  //   eval(test3) === -10 ? spans[2].style.color = 'green' : spans[2].style.color = 'red';
+  //   iframe.contentWindow.document.body.style.fontFamily = 'monospace';
+  //   iframe.contentWindow.document.close();
+  //   socket.emit('run-ide', document.getElementById('myIframe').srcdoc = `<style>span { font-family: monospace; color: ${eval(`${srcDocValue}${testData.funcName}${testData.funcParams[0]}`) === 10 ? 'green' : 'red'}; float: right; } div { font-family: monospace; margin: 10px;}</style><div>Testing sumFunction(5,5). Expecting 10: <span>${eval(test1)}</span></div><div>Testing sumFunction(-5,5). Expecting 0: <span>${eval(test2)}</span></div><div>Testing sumFunction(-5,-5). Expecting -10: <span>${eval(test3)}</span></div>`);
+  // };
+
   const runIDE = () => {
-    // const test = `${srcDocValue}sumFunction(5,5)`;
-    const test1 = `${srcDocValue}${testData.funcName}${testData.funcParams[0]}`;
-    const test2 = `${srcDocValue}${testData.funcName}${testData.funcParams[1]}`;
-    const test3 = `${srcDocValue}${testData.funcName}${testData.funcParams[2]}`;
     const iframe = document.getElementById('myIframe');
     iframe.contentWindow.document.open();
     /* eslint-disable no-eval */
     // iframe.contentWindow.document.write(`Testing sumFunction(5,5):${eval(test)}`);
-    iframe.contentWindow.document.write(`<div className="test">${testData.funcTests[0]}<span className="result">${eval(test1)}</span></div>`);
-    iframe.contentWindow.document.write(`<p className="test">${testData.funcTests[1]}<span className="result">${eval(test2)}</span></p>`);
-    iframe.contentWindow.document.write(`<p className="test">${testData.funcTests[2]}<span className="result">${eval(test3)}</span></p>`);
-    const spans = iframe.contentWindow.document.getElementsByTagName('span');
-    for (let i = 0; i < spans.length; i += 1) {
-      spans[i].style.float = 'right';
-    }
-    /* eslint-disable no-unused-expressions */
-    eval(test1) === 10 ? spans[0].style.color = 'green' : spans[0].style.color = 'red';
-    eval(test2) === 0 ? spans[1].style.color = 'green' : spans[1].style.color = 'red';
-    eval(test3) === -10 ? spans[2].style.color = 'green' : spans[2].style.color = 'red';
-    iframe.contentWindow.document.body.style.fontFamily = 'monospace';
+    iframe.contentWindow.document.write(eval(srcDocValue));
     iframe.contentWindow.document.close();
-    socket.emit('run-ide', document.getElementById('myIframe').srcdoc = `<style>span { font-family: monospace; color: ${eval(`${srcDocValue}${testData.funcName}${testData.funcParams[0]}`) === 10 ? 'green' : 'red'}; float: right; } div { font-family: monospace; margin: 10px;}</style><div>Testing sumFunction(5,5). Expecting 10: <span>${eval(test1)}</span></div><div>Testing sumFunction(-5,5). Expecting 0: <span>${eval(test2)}</span></div><div>Testing sumFunction(-5,-5). Expecting -10: <span>${eval(test3)}</span></div>`);
   };
 
   return (
@@ -90,7 +101,6 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
             extensions={[loadLanguage('javascript')]}
             onChange={(value) => {
               setSrcDocValue(value);
-              socket.emit('code-collab', value);
             }}
           />
           <iframe
@@ -114,13 +124,13 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       </Card>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Match found! Ready?</Modal.Title>
+          <Modal.Title>Partner found! Ready to Code?</Modal.Title>
         </Modal.Header>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             No
           </Button>
-          <Button variant="primary" onClick={handleYes}>
+          <Button variant="success" onClick={handleYes}>
             Yes
           </Button>
         </Modal.Footer>
