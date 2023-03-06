@@ -2,17 +2,12 @@ import React, { useState, useEffect } from 'react';
 import {
   collection, addDoc, query, orderBy, onSnapshot,
 } from 'firebase/firestore';
-import { getApps } from 'firebase/app';
 import { db } from '../firebase';
-
-// import { useAuth } from '../contexts/authContext';
-// const { currentUser } = useAuth();
 
 export default function FavoriteColor() {
   const [favoriteColor, setFavoriteColor] = useState('');
 
   useEffect(() => {
-    // console.log(getApps());
     const q = query(collection(db, 'users'));
     onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -24,8 +19,10 @@ export default function FavoriteColor() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addDoc(collection(db, 'testing'), {
-        color: favoriteColor,
+      await addDoc(collection(db, 'users'), {
+        email: '123@mail.com',
+        username: 'erik93',
+        wins: '5',
       });
       console.log('Document written with ID: ', 'y no hit');
     } catch (e) {

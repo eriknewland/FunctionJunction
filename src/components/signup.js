@@ -3,7 +3,11 @@ import {
   Form, Button, Card, Alert,
 } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import {
+  collection, addDoc, query, orderBy, onSnapshot,
+} from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
+import { db } from '../firebase';
 
 export default function Signup() {
   const emailRef = useRef();
@@ -25,6 +29,11 @@ export default function Signup() {
       setError('');
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);
+      await addDoc(collection(db, 'users'), {
+        email: emailRef.current.value,
+        username: passwordRef.current.value,
+        wins: '0',
+      });
       navigate('/');
     } catch {
       setError('Failed to create an account');
