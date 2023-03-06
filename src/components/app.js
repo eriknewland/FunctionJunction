@@ -19,7 +19,7 @@ import PrivateHomePage from './privateHomePage';
 import Offers from './offers';
 import PairedInstance from './pairedInstance';
 import PhotoUpload from './photoUpload';
-import Chatroom from './chatroom';
+import FavoriteColor from './firebaseDBtest';
 
 export default function App() {
   return (
@@ -95,7 +95,14 @@ export default function App() {
                   </PrivateRoute>
                 )}
               />
-              <Route path="/chat" element={<Chatroom />} />
+              <Route
+                path="/db-test"
+                element={(
+                  <PrivateRoute>
+                    <FavoriteColor />
+                  </PrivateRoute>
+                )}
+              />
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
