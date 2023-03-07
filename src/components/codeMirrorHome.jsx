@@ -17,7 +17,7 @@ import { useAuth } from '../contexts/authContext';
 export default function CodeMirrorHomePage({ qeued, setQeued }) {
   // STATES
   const { currentUser } = useAuth();
-  const [srcDocValue, setSrcDocValue] = useState(`Hello ${currentUser.email}\n\nQueue up to find a coding partner\n\nOr play around in the sandbox`);
+  const [srcDocValue, setSrcDocValue] = useState(`Hello ${currentUser.email}\n\nWelcome to Function Junction\n\nQueue up to find a coding partner\n\nOr play around in the sandbox`);
   const [testData, setTestData] = useState({
     funcName: 'sumFunction', funcSkeleton: 'const sumFunction = () => {};', funcTests: ['Testing sumFunction(5,5). Expecting 10: ', 'Testing sumFunction(-5,5). Expecting 0: ', 'Testing sumFunction(-5,-5). Expecting -10: '], funcParams: ['(5,5)', '(-5, 5)', '(-5, -5)'],
   });
