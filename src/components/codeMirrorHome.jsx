@@ -8,18 +8,31 @@ import { loadLanguage } from '@uiw/codemirror-extensions-langs';
 // import logo from '../logo.svg';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import io from 'socket.io-client';
-import { Card, Modal, Button } from 'react-bootstrap';
+import {
+  Card, Modal, Button, DropdownButton, Dropdown,
+} from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/authContext';
 
 export default function CodeMirrorHomePage({ qeued, setQeued }) {
-  const [srcDocValue, setSrcDocValue] = useState('//Play in the sandbox between problems!');
+  // STATES
+  const { currentUser } = useAuth();
+  const [srcDocValue, setSrcDocValue] = useState(`Hello ${currentUser.email}\n\nQueue up to find a coding partner\n\nOr play around in the sandbox`);
   const [testData, setTestData] = useState({
     funcName: 'sumFunction', funcSkeleton: 'const sumFunction = () => {};', funcTests: ['Testing sumFunction(5,5). Expecting 10: ', 'Testing sumFunction(-5,5). Expecting 0: ', 'Testing sumFunction(-5,-5). Expecting -10: '], funcParams: ['(5,5)', '(-5, 5)', '(-5, -5)'],
   });
   const [show, setShow] = useState(false);
   const [totalUsersOnline, setTotalUsersOnline] = useState(0);
+  const [pyOutput, setPyOutput] = useState(null);
+  const [pythonAPI, setPythonAPI] = useState(null);
+  const [langSelect, setLangSelect] = useState('javascript');
+
+  // SERVER/NAVIGATION
+
   const navigate = useNavigate();
   const socket = io('http://localhost:8000');
+
+  // CONTEXT
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -42,47 +55,56 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
         setShow(true);
       }
     }, 2000);
-  }, [qeued]);
+    // INITIALIZE PYTHON PARSER
+    const run = async () => {
+      const pyodide = await window.loadPyodide({
+        indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.1/full/',
+      });
+      setPythonAPI(pyodide);
+    };
+    if (pythonAPI === null) run();
+    // if (langSelect === 'python') {
+    //   setSrcDocValue('# Play around in the sandbox between problems');
+    // } else {
+    //   setSrcDocValue('//Play in the sandbox between problems!');
+    // }
+  }, [qeued, langSelect]);
 
+  // RUN PYTHON SCRIPT
+  const runPythonScript = async (code) => {
+    const compiledPython = await pythonAPI.runPythonAsync(srcDocValue);
+    setPyOutput(compiledPython);
+    const iframe = document.getElementById('myIframe');
+    iframe.contentWindow.document.open();
+    iframe.contentWindow.document.write(compiledPython);
+    iframe.contentWindow.document.close();
+  };
+
+  // CLOSE NEW MATCH MODAL
   const handleClose = () => setShow(false);
+
+  // ACCEPT NEW MATCH MODAL
   const handleYes = () => {
     setShow(false);
     navigate('/paired-instance');
   };
 
-  //= == ORIGINAL FUNCTION ===//
-  // const runIDE = () => {
-  //   // const test = `${srcDocValue}sumFunction(5,5)`;
-  //   const test1 = `${srcDocValue}${testData.funcName}${testData.funcParams[0]}`;
-  //   const test2 = `${srcDocValue}${testData.funcName}${testData.funcParams[1]}`;
-  //   const test3 = `${srcDocValue}${testData.funcName}${testData.funcParams[2]}`;
-  //   const iframe = document.getElementById('myIframe');
-  //   iframe.contentWindow.document.open();
-  //   /* eslint-disable no-eval */
-  //   // iframe.contentWindow.document.write(`Testing sumFunction(5,5):${eval(test)}`);
-  //   iframe.contentWindow.document.write(`<div className="test">${testData.funcTests[0]}<span className="result">${eval(test1)}</span></div>`);
-  //   iframe.contentWindow.document.write(`<p className="test">${testData.funcTests[1]}<span className="result">${eval(test2)}</span></p>`);
-  //   iframe.contentWindow.document.write(`<p className="test">${testData.funcTests[2]}<span className="result">${eval(test3)}</span></p>`);
-  //   const spans = iframe.contentWindow.document.getElementsByTagName('span');
-  //   for (let i = 0; i < spans.length; i += 1) {
-  //     spans[i].style.float = 'right';
-  //   }
-  //   /* eslint-disable no-unused-expressions */
-  //   eval(test1) === 10 ? spans[0].style.color = 'green' : spans[0].style.color = 'red';
-  //   eval(test2) === 0 ? spans[1].style.color = 'green' : spans[1].style.color = 'red';
-  //   eval(test3) === -10 ? spans[2].style.color = 'green' : spans[2].style.color = 'red';
-  //   iframe.contentWindow.document.body.style.fontFamily = 'monospace';
-  //   iframe.contentWindow.document.close();
-  //   socket.emit('run-ide', document.getElementById('myIframe').srcdoc = `<style>span { font-family: monospace; color: ${eval(`${srcDocValue}${testData.funcName}${testData.funcParams[0]}`) === 10 ? 'green' : 'red'}; float: right; } div { font-family: monospace; margin: 10px;}</style><div>Testing sumFunction(5,5). Expecting 10: <span>${eval(test1)}</span></div><div>Testing sumFunction(-5,5). Expecting 0: <span>${eval(test2)}</span></div><div>Testing sumFunction(-5,-5). Expecting -10: <span>${eval(test3)}</span></div>`);
-  // };
+  // RUN CODEMIRROR - DEFAULT TO JAVASCRIPT
 
   const runIDE = () => {
-    const iframe = document.getElementById('myIframe');
-    iframe.contentWindow.document.open();
-    /* eslint-disable no-eval */
-    // iframe.contentWindow.document.write(`Testing sumFunction(5,5):${eval(test)}`);
-    iframe.contentWindow.document.write(eval(srcDocValue));
-    iframe.contentWindow.document.close();
+    if (langSelect === 'javascript') {
+      const iframe = document.getElementById('myIframe');
+      iframe.contentWindow.document.open();
+      /* eslint-disable no-eval */
+      iframe.contentWindow.document.write(eval(srcDocValue));
+      iframe.contentWindow.document.close();
+    } else {
+      runPythonScript();
+    }
+  };
+
+  const handleLangSelect = (eventKey) => {
+    setLangSelect(eventKey);
   };
 
   return (
@@ -92,13 +114,23 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       }}
       >
         <Card.Body>
-          <h2>Sandbox</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h2>Sandbox</h2>
+            <DropdownButton
+              title={langSelect}
+              onSelect={handleLangSelect}
+              id="dropdown-basic-button"
+            >
+              <Dropdown.Item eventKey="javascript">Javascript</Dropdown.Item>
+              <Dropdown.Item eventKey="python">Python</Dropdown.Item>
+            </DropdownButton>
+          </div>
           <CodeMirror
             value={srcDocValue}
             height="400px"
             width="600px"
             theme={dracula}
-            extensions={[loadLanguage('javascript')]}
+            extensions={[loadLanguage(langSelect)]}
             onChange={(value) => {
               setSrcDocValue(value);
             }}

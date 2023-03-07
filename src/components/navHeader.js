@@ -58,7 +58,7 @@ export default function NavHeader({ qeued, setQeued }) {
           opacity: '1', fontSize: '12px', textAlign: 'center', justifyContent: 'center',
         }}
       >
-        <a href="/offers" style={{ color: 'black', textDecoration: 'none' }}><strong>&#127881;Sign up today and save 30%&#127881;</strong></a>
+        <a href="/offers" style={{ color: 'black', textDecoration: 'none' }}><strong>&#127881;Upgrade today and save 30%&#127881;</strong></a>
         <button
           type="button"
           className="close"
