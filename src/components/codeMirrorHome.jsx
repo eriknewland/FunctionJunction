@@ -12,6 +12,7 @@ import {
   Card, Modal, Button, DropdownButton, Dropdown,
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { useAuth } from '../contexts/authContext';
 
 export default function CodeMirrorHomePage({ qeued, setQeued }) {
@@ -31,6 +32,37 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
 
   const navigate = useNavigate();
   const socket = io('http://localhost:8000');
+
+  // AXIOS OPTIONS FOR JUDGE0 API
+  const options = {
+    method: 'POST',
+    url: 'https://judge0-ce.p.rapidapi.com/submissions',
+    params: { base64_encoded: 'false', fields: '*' },
+    headers: {
+      'content-type': 'application/json',
+      'Content-Type': 'application/json',
+      'X-RapidAPI-Key': '44459f35fdmsh06e87ca64c5a14bp196835jsnc2468000a707',
+      'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
+      useQueryString: true,
+    },
+    data: '{"language_id":62,"source_code":"public class Main { public static void main(String[] args) {  System.out.println(2 + 2); } };","stdout":"SnVkZ2Uw"}',
+  };
+
+  // sample JAVA code...
+  // public class Main { public static void main(String[] args) {  System.out.println(2 + 2); } };
+
+  const options2 = {
+    method: 'GET',
+    url: 'https://judge0-ce.p.rapidapi.com/submissions/a2fd8daa-8381-4885-abb0-be4ebcebf1d2', // update the token here
+    params: {
+      base64_encoded: 'false',
+      fields: '*',
+    },
+    headers: {
+      'X-RapidAPI-Key': '44459f35fdmsh06e87ca64c5a14bp196835jsnc2468000a707',
+      'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
+    },
+  };
 
   // CONTEXT
 
@@ -62,6 +94,20 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       });
       setPythonAPI(pyodide);
     };
+    // RUN JAVA CODE
+    // axios.request(options).then((response) => {
+    //   console.log(response.data.token);
+    //   // alert(response.data.stdout);
+    //   axios.request({ ...options2, url: `https://judge0-ce.p.rapidapi.com/submissions/${response.data.token}` }).then((response) => {
+    //     console.log(response.data.stdout);
+    //     const iframe = document.getElementById('myIframe');
+    //     iframe.contentWindow.document.open();
+    //     iframe.contentWindow.document.write(response.data.stdout);
+    //     iframe.contentWindow.document.close();
+    //   });
+    // }).catch((error) => {
+    //   console.error(error);
+    // });
     if (pythonAPI === null) run();
     // if (langSelect === 'python') {
     //   setSrcDocValue('# Play around in the sandbox between problems');
@@ -78,6 +124,23 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
     iframe.contentWindow.document.open();
     iframe.contentWindow.document.write(compiledPython);
     iframe.contentWindow.document.close();
+  };
+
+  // RUN JAVA
+  const runJava = () => {
+    axios.request(options).then((response) => {
+      console.log(response.data.token);
+      // alert(response.data.stdout);
+      axios.request({ ...options2, url: `https://judge0-ce.p.rapidapi.com/submissions/${response.data.token}` }).then((response) => {
+        console.log(response.data.stdout);
+        const iframe = document.getElementById('myIframe');
+        iframe.contentWindow.document.open();
+        iframe.contentWindow.document.write(response.data.stdout);
+        iframe.contentWindow.document.close();
+      });
+    }).catch((error) => {
+      console.error(error);
+    });
   };
 
   // CLOSE NEW MATCH MODAL
@@ -98,8 +161,10 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       /* eslint-disable no-eval */
       iframe.contentWindow.document.write(eval(srcDocValue));
       iframe.contentWindow.document.close();
-    } else {
+    } else if (langSelect === 'python') {
       runPythonScript();
+    } else {
+      runJava();
     }
   };
 
@@ -123,6 +188,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
             >
               <Dropdown.Item eventKey="javascript">Javascript</Dropdown.Item>
               <Dropdown.Item eventKey="python">Python</Dropdown.Item>
+              <Dropdown.Item eventKey="java">Java</Dropdown.Item>
             </DropdownButton>
           </div>
           <CodeMirror

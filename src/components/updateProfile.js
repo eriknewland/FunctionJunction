@@ -4,6 +4,7 @@ import {
 } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
+import PhotoUpdate from './photoUpdate';
 
 export default function UpdateProfile() {
   const emailRef = useRef();
@@ -58,6 +59,7 @@ export default function UpdateProfile() {
               <Form.Label>Password Confirmation</Form.Label>
               <Form.Control type="password" ref={passwordConfirmRef} required placeholder="Leave blank to keep the same" />
             </Form.Group>
+            <PhotoUpdate />
             <Button disabled={loading} className="w-100" type="submit" style={{ marginTop: '1rem' }}>Update</Button>
           </Form>
         </Card.Body>

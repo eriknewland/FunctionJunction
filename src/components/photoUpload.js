@@ -1,15 +1,19 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useAuth, upload } from '../contexts/authContext';
+import {
+  Card, Button, Alert, Nav, Navbar,
+} from 'react-bootstrap';
 import './css/uploadpicture.css';
 import axios from 'axios';
+import noAvatar from './background-images/no-avatar.png';
 
 export default function PhotoUpload() {
   const currentUser = useAuth();
   const [photo, setPhoto] = useState(null);
   const [counter, setCounter] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [photoURL, setPhotoURL] = useState('https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png');
+  const [photoURL, setPhotoURL] = useState(noAvatar);
 
   function handleChange(e) {
     if (e.target.files[0]) {
@@ -51,20 +55,22 @@ export default function PhotoUpload() {
   useEffect(() => {
     console.log(currentUser);
     setPhotoURL(currentUser.currentUser.photoURL);
-    axios.request(options2).then((response) => {
-      console.log(response.data);
-      alert(response.data.stdout);
-    }).catch((error) => {
-      console.error(error);
-    });
+    // axios.request(options).then((response) => {
+    //   console.log(response.data.token);
+    //   // alert(response.data.stdout);
+    //   axios.request({ ...options2, url: `https://judge0-ce.p.rapidapi.com/submissions/${response.data.token}` }).then((response) => {
+    //     console.log(response.data.stdout);
+    //   });
+    // }).catch((error) => {
+    //   console.error(error);
+    // });
   }, [currentUser, loading]);
 
   return (
     <div className="fields">
-      {/* <input type="file" onChange={handleChange} /> */}
-      {/* <button disabled={loading || !photo} onClick={handleClick}>Upload</button> */}
+      {/* <input type="file" onChange={handleChange} />
+      <button disabled={loading || !photo} onClick={handleClick}>Upload</button> */}
       <img src={photoURL} alt="Avatar" className="avatar" />
     </div>
-
   );
 }
