@@ -6,12 +6,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   collection, addDoc, query, orderBy, onSnapshot,
 } from 'firebase/firestore';
+import { updateProfile } from 'firebase/auth';
 import { useAuth } from '../contexts/authContext';
-import { db } from '../firebase';
+import auth, { db } from '../firebase';
 
 export default function Signup() {
   const emailRef = useRef();
   const passwordRef = useRef();
+  const usernameRef = useRef();
   const passwordConfirmRef = useRef();
   const { signup } = useAuth();
   const [error, setError] = useState('');
@@ -31,9 +33,12 @@ export default function Signup() {
       await signup(emailRef.current.value, passwordRef.current.value);
       await addDoc(collection(db, 'users'), {
         email: emailRef.current.value,
-        username: passwordRef.current.value,
+        username: usernameRef.current.value,
         wins: '0',
       });
+      // await updateProfile(auth.currentUser, { displayName: 'name' }).catch(
+      //   (err) => console.log(err),
+      // );
       navigate('/');
     } catch {
       setError('Failed to create an account');
@@ -52,6 +57,10 @@ export default function Signup() {
             <Form.Group id="email" style={{ marginTop: '1rem' }}>
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" ref={emailRef} required />
+            </Form.Group>
+            <Form.Group id="email" style={{ marginTop: '1rem' }}>
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" ref={usernameRef} required />
             </Form.Group>
             <Form.Group id="password" style={{ marginTop: '1rem' }}>
               <Form.Label>Password</Form.Label>

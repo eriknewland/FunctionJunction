@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 // Change <ToggleButton> to <Form.Check>
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card, Button, Form, FormControl, Navbar, Nav,
 } from 'react-bootstrap';
@@ -15,6 +15,17 @@ library.add(faSadCry);
 
 export default function Settings() {
   const navigate = useNavigate();
+  const [pauseMP4, setPauseMP4] = useState(false);
+  const backgroundToggle = () => {
+    console.log(pauseMP4);
+    if (pauseMP4 === true) {
+      setPauseMP4(false);
+      document.getElementById('video').pause();
+    } else {
+      setPauseMP4(true);
+      document.getElementById('video').play();
+    }
+  };
   return (
     <>
       <Navbar bg="light" expand="lg" fixed="top" justify="true" style={{ opacity: '0.75' }}>
@@ -41,8 +52,8 @@ export default function Settings() {
         <div style={{ display: 'flex', margin: '1rem' }}>
           {/* <input style={{ display: 'flex', margin: 'auto' }} type="checkbox" />
         <p style={{ display: 'flex', margin: 'auto' }}>Disable Background MP4</p> */}
-          <label style={{ margin: 'auto', marginRight: '1rem' }} htmlFor="cb01">Disable Background MP4</label>
-          <input className="toggle-background" defaultChecked type="checkbox" id="cb01" />
+          <label style={{ margin: 'auto', marginRight: '1rem' }} htmlFor="cb01">Play Background Video</label>
+          <input className="toggle-background" defaultChecked type="checkbox" id="cb01" onChange={backgroundToggle} />
         </div>
         <Card.Body>
           <Form>

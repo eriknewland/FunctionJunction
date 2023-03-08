@@ -13,12 +13,17 @@ import {
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import {
+  collection, addDoc, query, orderBy, onSnapshot, where,
+} from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
+import { db } from '../firebase';
 
 export default function CodeMirrorHomePage({ qeued, setQeued }) {
   // STATES
   const { currentUser } = useAuth();
-  const [srcDocValue, setSrcDocValue] = useState(`Hello ${currentUser.email}\n\nWelcome to Function Junction\n\nQueue up to find a coding partner\n\nOr play around in the sandbox`);
+  const [username, setUsername] = useState('');
+  const [srcDocValue, setSrcDocValue] = useState(`Hello ${username}\n\nWelcome to Function Junction\n\nQueue up to find a coding partner\n\nOr play around in the sandbox`);
   const [testData, setTestData] = useState({
     funcName: 'sumFunction', funcSkeleton: 'const sumFunction = () => {};', funcTests: ['Testing sumFunction(5,5). Expecting 10: ', 'Testing sumFunction(-5,5). Expecting 0: ', 'Testing sumFunction(-5,-5). Expecting -10: '], funcParams: ['(5,5)', '(-5, 5)', '(-5, -5)'],
   });
@@ -33,6 +38,8 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
   const navigate = useNavigate();
   const socket = io('http://localhost:8000');
 
+  const strLiteral = 'public class Main { public static void main(String[] args) { System.out.println(Math.random() * 100);} };';
+
   // AXIOS OPTIONS FOR JUDGE0 API
   const judgeOptionsPost = {
     method: 'POST',
@@ -45,7 +52,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
       useQueryString: true,
     },
-    data: '{"language_id":62,"source_code": "public class Main { public static void main(String[] args) { System.out.println(Math.random() * 100);} };","stdout":"SnVkZ2Uw"}',
+    data: `{"language_id":62,"source_code": "${strLiteral}","stdout":"SnVkZ2Uw"}`,
   };
 
   // sample JAVA code...
@@ -67,8 +74,17 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
   // CONTEXT
 
   useEffect(() => {
-    const x = JSON.stringify('public static String calculateSum(int a, int b) { int sum = a + b; String result = "{\"result\": " + sum + "}"; System.out.println(result)}');
-    console.log(x);
+    const q = query(collection(db, 'users'), where('email', '==', currentUser.email));
+    onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log('this is query snapshot', doc.data());
+        console.log(doc.data().username);
+        setSrcDocValue(`Hello ${doc.data().username}\n\nWelcome to Function Junction\n\nQueue up to find a coding partner\n\nOr play around in the sandbox`);
+      });
+    });
+  }, []);
+
+  useEffect(() => {
     socket.on('connect', () => {
       console.log('connected');
     });

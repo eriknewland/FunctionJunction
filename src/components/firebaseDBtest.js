@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {
-  collection, addDoc, query, orderBy, onSnapshot,
+  collection, addDoc, query, orderBy, onSnapshot, where,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 
+import { useAuth } from '../contexts/authContext';
+
 export default function FavoriteColor() {
   const [favoriteColor, setFavoriteColor] = useState('');
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    const q = query(collection(db, 'users'));
+    const q = query(collection(db, 'users'), where('email', '==', currentUser.email));
     onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log('this is query snapshot', doc.data());
