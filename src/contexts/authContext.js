@@ -12,7 +12,7 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-export async function upload(file, currentUser, setLoading) {
+export async function upload(file, currentUser, setLoading, setPhotoURL) {
   const fileRef = ref(storage, `${currentUser.currentUser.uid}.png`);
 
   setLoading(true);
@@ -26,6 +26,8 @@ export async function upload(file, currentUser, setLoading) {
   console.log(photoURL);
 
   updateProfile(currentUser.currentUser, { photoURL });
+
+  setPhotoURL(photoURL);
 
   setLoading(false);
   alert('Uploaded file!');

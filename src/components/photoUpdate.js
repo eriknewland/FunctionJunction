@@ -22,14 +22,14 @@ export default function PhotoUpdate() {
   }
 
   function handleClick() {
-    upload(photo, currentUser, setLoading)
-      .then(() => setPhotoURL(currentUser.currentUser.photoURL));
+    upload(photo, currentUser, setLoading, setPhotoURL)
+      .then(() => console.log(currentUser.currentUser.photoURL));
+    // .then(() => setPhotoURL(currentUser.currentUser.photoURL));
   }
 
   useEffect(() => {
-    console.log(currentUser);
     setPhotoURL(currentUser.currentUser.photoURL);
-  }, [currentUser, loading]);
+  }, []);
 
   return (
     <>
