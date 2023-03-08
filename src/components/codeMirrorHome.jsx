@@ -34,7 +34,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
   const socket = io('http://localhost:8000');
 
   // AXIOS OPTIONS FOR JUDGE0 API
-  const options = {
+  const judgeOptionsPost = {
     method: 'POST',
     url: 'https://judge0-ce.p.rapidapi.com/submissions',
     params: { base64_encoded: 'false', fields: '*' },
@@ -45,13 +45,13 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
       useQueryString: true,
     },
-    data: '{"language_id":62,"source_code":"public class Main { public static void main(String[] args) {  System.out.println(2 + 2); } };","stdout":"SnVkZ2Uw"}',
+    data: '{"language_id":62,"source_code": "public class Main { public static void main(String[] args) { System.out.println(Math.random() * 100);} };","stdout":"SnVkZ2Uw"}',
   };
 
   // sample JAVA code...
   // public class Main { public static void main(String[] args) {  System.out.println(2 + 2); } };
 
-  const options2 = {
+  const judgeOptionsGet = {
     method: 'GET',
     url: 'https://judge0-ce.p.rapidapi.com/submissions/a2fd8daa-8381-4885-abb0-be4ebcebf1d2', // update the token here
     params: {
@@ -67,6 +67,8 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
   // CONTEXT
 
   useEffect(() => {
+    const x = JSON.stringify('public static String calculateSum(int a, int b) { int sum = a + b; String result = "{\"result\": " + sum + "}"; System.out.println(result)}');
+    console.log(x);
     socket.on('connect', () => {
       console.log('connected');
     });
@@ -119,6 +121,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
   // RUN PYTHON SCRIPT
   const runPythonScript = async (code) => {
     const compiledPython = await pythonAPI.runPythonAsync(srcDocValue);
+    console.log(srcDocValue);
     setPyOutput(compiledPython);
     const iframe = document.getElementById('myIframe');
     iframe.contentWindow.document.open();
@@ -128,10 +131,10 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
 
   // RUN JAVA
   const runJava = () => {
-    axios.request(options).then((response) => {
+    axios.request(judgeOptionsPost).then((response) => {
       console.log(response.data.token);
       // alert(response.data.stdout);
-      axios.request({ ...options2, url: `https://judge0-ce.p.rapidapi.com/submissions/${response.data.token}` }).then((response) => {
+      axios.request({ ...judgeOptionsGet, url: `https://judge0-ce.p.rapidapi.com/submissions/${response.data.token}` }).then((response) => {
         console.log(response.data.stdout);
         const iframe = document.getElementById('myIframe');
         iframe.contentWindow.document.open();
@@ -163,7 +166,9 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       iframe.contentWindow.document.close();
     } else if (langSelect === 'python') {
       runPythonScript();
-    } else {
+    } else if (langSelect === 'java') {
+      runJava();
+    } else if (langSelect === 'C++') {
       runJava();
     }
   };
@@ -187,8 +192,10 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
               id="dropdown-basic-button"
             >
               <Dropdown.Item eventKey="javascript">Javascript</Dropdown.Item>
-              <Dropdown.Item eventKey="python">Python</Dropdown.Item>
+              <Dropdown.Item eventKey="C++">C++</Dropdown.Item>
               <Dropdown.Item eventKey="java">Java</Dropdown.Item>
+              <Dropdown.Item eventKey="python">Python</Dropdown.Item>
+              <Dropdown.Item eventKey="ruby">Ruby</Dropdown.Item>
             </DropdownButton>
           </div>
           <CodeMirror
@@ -196,7 +203,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
             height="400px"
             width="600px"
             theme={dracula}
-            extensions={[loadLanguage(langSelect)]}
+            extensions={[loadLanguage(langSelect === 'C++' ? 'cpp' : langSelect)]}
             onChange={(value) => {
               setSrcDocValue(value);
             }}
