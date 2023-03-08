@@ -38,13 +38,15 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
   const navigate = useNavigate();
   const socket = io('http://localhost:8000');
 
-  const strLiteral = 'public class Main { public static void main(String[] args) { System.out.println(Math.random() * 100);} };';
+  const strLiteral = btoa('public class Main { public static void main(String[] args) { System.out.println(Math.random() * 100);} };');
+
+  const strLiteral2 = btoa(srcDocValue); // working
 
   // AXIOS OPTIONS FOR JUDGE0 API
   const judgeOptionsPost = {
     method: 'POST',
     url: 'https://judge0-ce.p.rapidapi.com/submissions',
-    params: { base64_encoded: 'false', fields: '*' },
+    params: { base64_encoded: 'true', fields: '*' },
     headers: {
       'content-type': 'application/json',
       'Content-Type': 'application/json',
@@ -52,7 +54,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
       useQueryString: true,
     },
-    data: `{"language_id":62,"source_code": "${strLiteral}","stdout":"SnVkZ2Uw"}`,
+    data: `{"language_id":54,"source_code": "${strLiteral2}","stdout":"SnVkZ2Uw"}`, // 54 is c++. THIS THING WORKS OMG
   };
 
   // sample JAVA code...
