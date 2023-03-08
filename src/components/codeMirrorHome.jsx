@@ -32,6 +32,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
   const [pyOutput, setPyOutput] = useState(null);
   const [pythonAPI, setPythonAPI] = useState(null);
   const [langSelect, setLangSelect] = useState('javascript');
+  const [langID, setLangID] = useState(null);
 
   // SERVER/NAVIGATION
 
@@ -54,7 +55,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
       useQueryString: true,
     },
-    data: `{"language_id":54,"source_code": "${strLiteral2}","stdout":"SnVkZ2Uw"}`, // 54 is c++. THIS THING WORKS OMG
+    data: `{"language_id":${langID},"source_code": "${strLiteral2}","stdout":"SnVkZ2Uw"}`, // 54 is c++. THIS THING WORKS OMG
   };
 
   // sample JAVA code...
@@ -188,11 +189,26 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       runJava();
     } else if (langSelect === 'C++') {
       runJava();
+    } else {
+      runJava();
     }
   };
 
   const handleLangSelect = (eventKey) => {
     setLangSelect(eventKey);
+    if (eventKey === 'C++') {
+      console.log('hi');
+      setLangID(54);
+    }
+    if (eventKey === 'java') {
+      setLangID(62);
+    }
+    if (eventKey === 'ruby') {
+      setLangID(72);
+    }
+    if (eventKey === 'swift') {
+      setLangID(83);
+    }
   };
 
   return (
@@ -214,6 +230,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
               <Dropdown.Item eventKey="java">Java</Dropdown.Item>
               <Dropdown.Item eventKey="python">Python</Dropdown.Item>
               <Dropdown.Item eventKey="ruby">Ruby</Dropdown.Item>
+              <Dropdown.Item eventKey="swift">Swift</Dropdown.Item>
             </DropdownButton>
           </div>
           <CodeMirror
