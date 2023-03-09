@@ -56,7 +56,7 @@ export default function PhotoUpload() {
   };
   useEffect(() => {
     console.log(currentUser);
-    setPhotoURL(currentUser.currentUser.photoURL);
+    if (currentUser.currentUser.photoURL) { setPhotoURL(currentUser.currentUser.photoURL); }
     // axios.request(options).then((response) => {
     //   console.log(response.data.token);
     //   // alert(response.data.stdout);

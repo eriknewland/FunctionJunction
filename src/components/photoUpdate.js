@@ -30,7 +30,7 @@ export default function PhotoUpdate() {
   }
 
   useEffect(() => {
-    setPhotoURL(currentUser.currentUser.photoURL);
+    if (currentUser.currentUser.photoURL) { setPhotoURL(currentUser.currentUser.photoURL); }
   }, []);
 
   return (

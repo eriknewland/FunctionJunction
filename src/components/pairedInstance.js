@@ -53,6 +53,7 @@ export default function CodeMirrorHomePage() {
   };
 
   useEffect(() => {
+    console.log(db);
     // incrementWins();
     // console.log(currentUser)(async () => {
     //   const q = query(collection(db, 'users'), where('email', '==', currentUser.email));
