@@ -14,12 +14,15 @@ import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Fireworks } from '@fireworks-js/react';
 import {
-  increment, doc, updateDoc, collection, getDoc,
+  increment, doc, updateDoc, collection, getDoc, query, where, getDocs, get, onSnapshot,
 } from 'firebase/firestore';
+import firebase from 'firebase/compat/app';
 import NavHeaderNoToggle from './navHeaderNoToggle';
 import ChatRoom from './chatroom';
 import { useAuth } from '../contexts/authContext';
 import { db } from '../firebase';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
 export default function CodeMirrorHomePage() {
   const [srcDocValue, setSrcDocValue] = useState('//Create a function that adds two numbers together\nconst sumFunction = () => {};');
@@ -34,28 +37,34 @@ export default function CodeMirrorHomePage() {
   const navigate = useNavigate();
 
   async function incrementWins() {
-    // console.log(doc(db, 'users', currentUser.email));
-    const query123 = collection(db, 'users');
-    const newDoc = getDoc(query123, currentUser.email);
-    console.log(newDoc);
-    await updateDoc(query123, {
-      wins: increment(50),
+    const washingtonRef = await doc(db, 'users', 'c6pBk4tJkFCibDbtMQjn');
+    console.log(washingtonRef);
+    // Atomically increment the population of the city by 50.
+    const res = await updateDoc(washingtonRef, {
+      wins: increment(1),
     });
   }
 
+  const incrementWins2 = async () => {
+    const storyRef = collection(db, 'users').doc(currentUser.email);
+    await updateDoc(storyRef, {
+      wins: increment(50),
+    });
+  };
+
   useEffect(() => {
-    // const nameQuery = query(collection(db, 'users'), where('email', '==', currentUser.email));
-    // onSnapshot(nameQuery, (querySnapshot) => {
-    //   querySnapshot.forEach((doc) => {
-    //     doc.update({
-    //       wins: increment(1),
+    // incrementWins();
+    // console.log(currentUser)(async () => {
+    //   const q = query(collection(db, 'users'), where('email', '==', currentUser.email));
+    //   onSnapshot(q, (querySnapshot) => {
+    //     querySnapshot.forEach((doc) => {
+    //       updateDoc(doc, {
+    //         wins: increment(1),
+    //       });
     //     });
     //   });
-    // });
-    // (async () => {
-    //   await incrementWins();
     // })();
-  }, [problemSolved]);
+  }, []);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -74,6 +83,7 @@ export default function CodeMirrorHomePage() {
       if (match) {
         setTimeout(() => {
           setProblemSolved(true);
+          incrementWins();
         }, 500);
       }
       setProblemSolved(false);
