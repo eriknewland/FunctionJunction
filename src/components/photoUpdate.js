@@ -62,7 +62,7 @@ export default function PhotoUpdate() {
 
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', margin: '0px' }}>
-        <button type="button" disabled={loading || !photo} onClick={handleClick}>Upload</button>
+        <button type="button" disabled={loading || !photo} onClick={handleClick}>Update Profile Photo</button>
       </div>
     </>
   );

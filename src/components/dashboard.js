@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card, Button, Alert, Nav, Navbar,
 } from 'react-bootstrap';
@@ -8,13 +8,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMedal, faArrowTrendUp } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
+import {
+  collection, query, onSnapshot, where,
+} from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
 import DashboardCalendar from './calendar';
 import PhotoUpload from './photoUpload';
+import { db } from '../firebase';
 
 library.add(faMedal, faArrowTrendUp);
 
 export default function Dashboard() {
+  const [lastSevenDays, setLastSevenDays] = useState(0);
+  const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
@@ -41,6 +47,21 @@ export default function Dashboard() {
     }
   }
 
+  useEffect(() => {
+    const nameQuery = query(collection(db, 'users'), where('email', '==', currentUser.email));
+    onSnapshot(nameQuery, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        setUsername(doc.data().username);
+      });
+    });
+    const winsQuery = query(collection(db, 'users'), where('email', '==', currentUser.email));
+    onSnapshot(winsQuery, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        setLastSevenDays(doc.data().wins);
+      });
+    });
+  }, []);
+
   return (
     <>
       <Navbar bg="light" expand="lg" fixed="top" justify="true" style={{ opacity: '0.75' }}>
@@ -65,19 +86,12 @@ export default function Dashboard() {
           <h2 className="text-center mb-4">Profile</h2>
           {error && <Alert variant="danger">{error}</Alert>}
           <DashboardCalendar />
-          {/* <img
-            src="https://avatarfiles.alphacoders.com/228/thumb-228939.png"
-            alt="Avatar"
-            className="img-fluid my-5"
-            style={{
-              width: '70px', marginRight: '2rem', borderRadius: '50%', boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.75)',
-            }}
-          /> */}
           <div style={{ display: 'flex' }}>
             <PhotoUpload />
             <div style={{ margin: 'auto', marginLeft: '1rem' }}>
-              <strong>Email: </strong>
-              {currentUser.email}
+              <strong>Username: </strong>
+
+              {username}
             </div>
 
           </div>
@@ -85,7 +99,12 @@ export default function Dashboard() {
             <strong>Ranking: </strong>
             Rookie
             <FontAwesomeIcon icon="fa-solid fa-medal" size="lg" style={{ color: '#CD7F32' }} />
+            <p>
+              <span style={{ fontWeight: 'bold' }}>Membership: </span>
+              Free
+            </p>
           </div>
+
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <strong>Last 7 Days</strong>
@@ -93,9 +112,9 @@ export default function Dashboard() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <p>
-                5
+                {lastSevenDays}
                 {' '}
-                <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" style={{ color: '#00FF00' }} />
+                {lastSevenDays > 4 && <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" style={{ color: '#00FF00' }} />}
               </p>
               <p>250</p>
             </div>

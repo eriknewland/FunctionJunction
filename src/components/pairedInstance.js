@@ -13,19 +13,49 @@ import {
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Fireworks } from '@fireworks-js/react';
+import {
+  increment, doc, updateDoc, collection, getDoc,
+} from 'firebase/firestore';
 import NavHeaderNoToggle from './navHeaderNoToggle';
 import ChatRoom from './chatroom';
+import { useAuth } from '../contexts/authContext';
+import { db } from '../firebase';
 
 export default function CodeMirrorHomePage() {
   const [srcDocValue, setSrcDocValue] = useState('//Create a function that adds two numbers together\nconst sumFunction = () => {};');
   const [testData, setTestData] = useState({
     funcName: 'sumFunction', funcSkeleton: 'const sumFunction = () => {};', funcTests: ['Testing sumFunction(5,5). Expecting 10: ', 'Testing sumFunction(-5,5). Expecting 0: ', 'Testing sumFunction(-5,-5). Expecting -10: '], funcParams: ['(5,5)', '(-5, 5)', '(-5, -5)'],
   });
+  const { currentUser } = useAuth();
   const [problemSolved, setProblemSolved] = useState(null);
   const [problemSolved2, setProblemSolved2] = useState(false);
   const [tracker, setTracker] = useState(0);
   const socket = io('http://localhost:8000');
   const navigate = useNavigate();
+
+  async function incrementWins() {
+    // console.log(doc(db, 'users', currentUser.email));
+    const query123 = collection(db, 'users');
+    const newDoc = getDoc(query123, currentUser.email);
+    console.log(newDoc);
+    await updateDoc(query123, {
+      wins: increment(50),
+    });
+  }
+
+  useEffect(() => {
+    // const nameQuery = query(collection(db, 'users'), where('email', '==', currentUser.email));
+    // onSnapshot(nameQuery, (querySnapshot) => {
+    //   querySnapshot.forEach((doc) => {
+    //     doc.update({
+    //       wins: increment(1),
+    //     });
+    //   });
+    // });
+    // (async () => {
+    //   await incrementWins();
+    // })();
+  }, [problemSolved]);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -39,7 +69,6 @@ export default function CodeMirrorHomePage() {
       const regex = /<span>10<\/span>/;
       const match = data.match(regex);
       console.log(match);
-
       console.log(tracker);
       document.getElementById('myIframe').srcdoc = `${data}`;
       if (match) {
@@ -48,7 +77,6 @@ export default function CodeMirrorHomePage() {
         }, 500);
       }
       setProblemSolved(false);
-      // match ? setProblemSolved(true) : setProblemSolved(false);
     });
     // socket.on('total-users-online', (data) => {
     //   console.log(`Total users online: ${data}`);
@@ -81,8 +109,10 @@ export default function CodeMirrorHomePage() {
 
     /* DEMO DAY CODE */
     iframe.contentWindow.document.body.style.fontFamily = 'monospace';
+    document.getElementById('myIframe').contentWindow.document.body.style.color = 'rgb(50,255,0)';
+
     iframe.contentWindow.document.close();
-    socket.emit('run-ide', document.getElementById('myIframe').srcdoc = `<style>span { font-family: monospace; color: ${eval(`${srcDocValue}${testData.funcName}${testData.funcParams[0]}`) === 10 ? 'green' : 'red'}; float: right; } div { font-family: monospace; margin: 10px;}</style><div>Testing sumFunction(5,5). Expecting 10: <span>${eval(test1)}</span></div><div>Testing sumFunction(-5,5). Expecting 0: <span>${eval(test2)}</span></div><div>Testing sumFunction(-5,-5). Expecting -10: <span>${eval(test3)}</span></div>`);
+    socket.emit('run-ide', document.getElementById('myIframe').srcdoc = `<style>span { font-family: monospace; color: ${eval(`${srcDocValue}${testData.funcName}${testData.funcParams[0]}`) === 10 ? 'rgb(50,255,0)' : 'red'}; float: right; } div { font-family: monospace; margin: 10px; color: rgb(50,255,0);}</style><div>Testing sumFunction(5,5). Expecting 10: <span>${eval(test1)}</span></div><div>Testing sumFunction(-5,5). Expecting 0: <span>${eval(test2)}</span></div><div>Testing sumFunction(-5,-5). Expecting -10: <span>${eval(test3)}</span></div>`);
   };
 
   const handleClose = () => navigate('/');
@@ -124,7 +154,7 @@ export default function CodeMirrorHomePage() {
             <iframe
               title="idk"
               style={{
-                height: '100px', width: '600px', border: '2px solid black', display: 'flex', margin: 'auto', background: 'whitesmoke', justifyContent: 'center', marginTop: '1rem', borderRadius: '20px',
+                height: '100px', width: '600px', border: '2px solid black', display: 'flex', margin: 'auto', background: 'black', justifyContent: 'center', marginTop: '1rem', borderRadius: '20px',
               }}
               id="myIframe"
             />

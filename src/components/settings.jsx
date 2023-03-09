@@ -16,7 +16,7 @@ library.add(faSadCry);
 
 export default function Settings() {
   const navigate = useNavigate();
-  const [pauseMP4, setPauseMP4] = useState(false);
+  const [pauseMP4, setPauseMP4] = useState(true);
   const backgroundToggle = () => {
     console.log(pauseMP4);
     if (pauseMP4 === true) {
@@ -53,7 +53,7 @@ export default function Settings() {
         <div style={{ display: 'flex', margin: '1rem' }}>
           {/* <input style={{ display: 'flex', margin: 'auto' }} type="checkbox" />
         <p style={{ display: 'flex', margin: 'auto' }}>Disable Background MP4</p> */}
-          <label style={{ margin: 'auto', marginRight: '1rem' }} htmlFor="cb01">Play Background Video</label>
+          <label style={{ margin: 'auto', marginRight: '1rem' }} htmlFor="cb01">Background Video Autoplay</label>
           <input className="toggle-background" defaultChecked type="checkbox" id="cb01" onChange={backgroundToggle} />
         </div>
         <Card.Body>
@@ -67,7 +67,7 @@ export default function Settings() {
               <Form.Label>Ask a Question to Support</Form.Label>
               <FormControl as="textarea" rows="3" />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="primary">
               Submit
             </Button>
           </Form>

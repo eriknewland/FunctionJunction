@@ -21,7 +21,8 @@ button {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border-width: 5px;
-  border-color: gray;
+  border-width: 0px;
+  border-color: black;
   border-style: outset;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
 }
