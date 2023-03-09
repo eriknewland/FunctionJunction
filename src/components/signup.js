@@ -6,7 +6,7 @@ import {
 } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  collection, addDoc, query, orderBy, onSnapshot,
+  collection, addDoc, query, orderBy, onSnapshot, doc, setDoc,
 } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import { useAuth } from '../contexts/authContext';
@@ -33,11 +33,20 @@ export default function Signup() {
       setError('');
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);
-      await addDoc(collection(db, 'users'), {
+
+      await setDoc(doc(db, 'users', emailRef.current.value), {
         email: emailRef.current.value,
         username: usernameRef.current.value,
-        wins: '0',
+        wins: 0,
+        total_wins: 0,
       });
+
+      // await addDoc(collection(db, 'users'), {
+      //   email: emailRef.current.value,
+      //   username: usernameRef.current.value,
+      //   wins: 0,
+      //   total_wins: 0,
+      // });
       // await updateProfile(auth.currentUser, { displayName: 'name' }).catch(
       //   (err) => console.log(err),
       // );

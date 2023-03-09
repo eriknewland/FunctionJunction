@@ -19,6 +19,7 @@ import { db } from '../firebase';
 library.add(faMedal, faArrowTrendUp);
 
 export default function Dashboard() {
+  const [totalWinCount, setTotalWinCount] = useState(0);
   const [lastSevenDays, setLastSevenDays] = useState(0);
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
@@ -58,6 +59,7 @@ export default function Dashboard() {
     onSnapshot(winsQuery, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
         setLastSevenDays(doc.data().wins);
+        setTotalWinCount(doc.data().total_wins);
       });
     });
   }, []);
@@ -116,7 +118,7 @@ export default function Dashboard() {
                 {' '}
                 {lastSevenDays > 4 && <FontAwesomeIcon icon="fa-solid fa-arrow-trend-up" style={{ color: '#00FF00' }} />}
               </p>
-              <p>250</p>
+              <p>{totalWinCount}</p>
             </div>
           </div>
           <Link to="/update-profile" className="btn btn-primary w-100 mt-3">

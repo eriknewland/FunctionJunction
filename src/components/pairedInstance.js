@@ -37,20 +37,24 @@ export default function CodeMirrorHomePage() {
   const navigate = useNavigate();
 
   async function incrementWins() {
-    const washingtonRef = await doc(db, 'users', 'c6pBk4tJkFCibDbtMQjn');
+    const washingtonRef = await doc(db, 'users', currentUser.email);
     console.log(washingtonRef);
     // Atomically increment the population of the city by 50.
     const res = await updateDoc(washingtonRef, {
       wins: increment(1),
+      total_wins: increment(1),
     });
   }
 
-  const incrementWins2 = async () => {
-    const storyRef = collection(db, 'users').doc(currentUser.email);
-    await updateDoc(storyRef, {
-      wins: increment(50),
-    });
-  };
+  // async function incrementWins2() {
+  //   const washingtonRef = await doc(db, 'users', 'c6pBk4tJkFCibDbtMQjn');
+  //   console.log(washingtonRef);
+  //   // Atomically increment the population of the city by 50.
+  //   const res = await updateDoc(washingtonRef, {
+  //     wins: increment(1),
+  //     total_wins: increment(1),
+  //   });
+  // }
 
   useEffect(() => {
     console.log(db);
@@ -85,6 +89,7 @@ export default function CodeMirrorHomePage() {
         setTimeout(() => {
           setProblemSolved(true);
           incrementWins();
+          // incrementWins2();
         }, 500);
       }
       setProblemSolved(false);
