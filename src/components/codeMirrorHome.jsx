@@ -1,10 +1,12 @@
+/* eslint-disable no-console */
+/* eslint-disable no-shadow */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import './css/codemirror.css';
 import CodeMirror from '@uiw/react-codemirror';
-import { loadLanguage } from '@uiw/codemirror-extensions-langs';
+import { langs, loadLanguage } from '@uiw/codemirror-extensions-langs';
 // import logo from '../logo.svg';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import io from 'socket.io-client';
@@ -18,6 +20,7 @@ import {
 } from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
 import { db } from '../firebase';
+import reorganizedLanguageOptions from './constants/languageID';
 
 export default function CodeMirrorHomePage({ qeued, setQeued }) {
   // STATES
@@ -33,6 +36,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
   const [pythonAPI, setPythonAPI] = useState(null);
   const [langSelect, setLangSelect] = useState('javascript');
   const [langID, setLangID] = useState(null);
+  const [languageOptions, setLanguageOptions] = useState(reorganizedLanguageOptions);
 
   // SERVER/NAVIGATION
 
@@ -97,7 +101,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
     });
     socket.on('run-ide', (data) => {
       console.log(data);
-      document.getElementById('myIframe').srcdoc = `${data}`;
+      // document.getElementById('myIframe').srcdoc = `${data}`;
     });
     socket.on('total-users-online', (data) => {
       console.log(`Total users online: ${data}`);
@@ -158,7 +162,18 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
         const iframe = document.getElementById('myIframe');
         iframe.contentWindow.document.open();
         iframe.contentWindow.document.write(response.data.stdout);
+        iframe.contentWindow.document.body.style.color = 'rgb(50,255,0)';
+        iframe.contentWindow.document.body.style.fontFamily = '"VT323",monospace';
         iframe.contentWindow.document.close();
+        const cursor = document.createElement('span');
+        // cursor.innerHTML = '_';
+        // cursor.style.color = 'rgb(50,255,0)';
+        // cursor.style.backgroundColor = 'rgb(50,255,0)';
+        // cursor.style.border = '1px solid rgb(50,255,0)';
+        // cursor.style.borderRadius = '2px';
+        // cursor.style.padding = '2px';
+        // cursor.style.margin = '0px';
+        // iframe.contentWindow.document.body.appendChild(cursor);
       });
     }).catch((error) => {
       console.error(error);
@@ -195,20 +210,66 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
   };
 
   const handleLangSelect = (eventKey) => {
+    // if (eventKey === 'C++') {
+    //   setLangSelect('cpp');
+    // }
+    // if (eventKey === 'assembly') {
+    //   setLangSelect('gas');
+    // }
+    // if (eventKey === 'basic' || eventKey === 'bash') {
+    //   setLangSelect('shell');
+    // } else {
     setLangSelect(eventKey);
-    if (eventKey === 'C++') {
-      console.log('hi');
-      setLangID(54);
+    for (let i = 0; i < languageOptions.length; i += 1) {
+      if (languageOptions[i].value === eventKey) {
+        setLangID(languageOptions[i].id);
+        break;
+      }
     }
-    if (eventKey === 'java') {
-      setLangID(62);
+    // if (eventKey === 'C++') {
+    //   console.log('hi');
+    //   setLangID(54);
+    // }
+    // if (eventKey === 'java') {
+    //   setLangID(62);
+    // }
+    // if (eventKey === 'ruby') {
+    //   setLangID(72);
+    // }
+    // if (eventKey === 'swift') {
+    //   setLangID(83);
+    // }
+    console.log(langSelect);
+  };
+
+  const langCleaner = (input) => {
+    if (input === 'C++') {
+      return 'cpp';
+    } if (input === 'assembly') {
+      return 'gas';
+    } if (input === 'c#') {
+      return 'csharp';
+    } if (input === 'basic' || input === 'bash') {
+      return 'shell';
+    } if (input === 'elixir') {
+      return 'erlang';
+    } if (input === 'exe') {
+      return 'javascript';
+    } if (input === 'fsharp') {
+      return 'fcl';
+    } if (input === 'lisp') {
+      return 'commonLisp';
+    } if (input === 'ocaml') {
+      return 'objectiveC';
+    } if (input === 'prolog') {
+      return 'shell';
+    } if (input === 'text') {
+      return 'textile';
+    } if (input === 'Visual Basic') {
+      return 'vb';
     }
-    if (eventKey === 'ruby') {
-      setLangID(72);
-    }
-    if (eventKey === 'swift') {
-      setLangID(83);
-    }
+
+    return input;
   };
 
   return (
@@ -220,25 +281,35 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
         <Card.Body>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h2>Sandbox</h2>
-            <DropdownButton
-              title={langSelect}
-              onSelect={handleLangSelect}
-              id="dropdown-basic-button"
-            >
-              <Dropdown.Item eventKey="javascript">Javascript</Dropdown.Item>
-              <Dropdown.Item eventKey="C++">C++</Dropdown.Item>
-              <Dropdown.Item eventKey="java">Java</Dropdown.Item>
-              <Dropdown.Item eventKey="python">Python</Dropdown.Item>
-              <Dropdown.Item eventKey="ruby">Ruby</Dropdown.Item>
-              <Dropdown.Item eventKey="swift">Swift</Dropdown.Item>
-            </DropdownButton>
+            <Dropdown>
+              <Dropdown.Toggle
+                variant="success"
+                id="dropdown-basic"
+                title={langSelect}
+
+                // onSelect={handleLangSelect}
+              >
+                {langSelect}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu style={{
+                maxHeight: '200px', overflowY: 'auto',
+              }}
+              >
+                {languageOptions.map((option) => (
+                  <Dropdown.Item eventKey={option.value} onClick={() => handleLangSelect(option.value)}>
+                    {option.value.charAt(0).toUpperCase() + option.value.slice(1)}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
           <CodeMirror
             value={srcDocValue}
             height="400px"
             width="600px"
             theme={dracula}
-            extensions={[loadLanguage(langSelect === 'C++' ? 'cpp' : langSelect)]}
+            extensions={[loadLanguage(langCleaner(langSelect))]}
             onChange={(value) => {
               setSrcDocValue(value);
             }}
@@ -246,7 +317,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
           <iframe
             title="idk"
             style={{
-              height: '100px', width: '600px', border: '2px solid black', display: 'flex', margin: 'auto', background: 'whitesmoke', justifyContent: 'center', marginTop: '1rem', borderRadius: '20px',
+              height: '100px', width: '600px', border: '2px solid black', display: 'flex', margin: 'auto', background: 'black', justifyContent: 'center', marginTop: '1rem', borderRadius: '20px',
             }}
             id="myIframe"
           />

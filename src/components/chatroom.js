@@ -1,3 +1,7 @@
+/* eslint-disable no-console */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-shadow */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import socketIOClient from 'socket.io-client';

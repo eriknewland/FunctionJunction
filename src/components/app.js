@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { Container } from 'react-bootstrap';
 import {
   BrowserRouter as Router, Route,

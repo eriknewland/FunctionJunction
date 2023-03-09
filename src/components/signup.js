@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable no-unused-vars */
 import React, { useRef, useState } from 'react';
 import {
   Form, Button, Card, Alert,

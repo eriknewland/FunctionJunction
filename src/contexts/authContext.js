@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useContext, useState, useEffect } from 'react';
 import { updateEmail, updatePassword, updateProfile } from 'firebase/auth';
 import {
@@ -30,7 +31,6 @@ export async function upload(file, currentUser, setLoading, setPhotoURL) {
   setPhotoURL(photoURL);
 
   setLoading(false);
-  alert('Uploaded file!');
 }
 
 // eslint-disable-next-line react/prop-types

@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Card, Button, Alert, Nav, Navbar,
 } from 'react-bootstrap';

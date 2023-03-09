@@ -1,6 +1,8 @@
+/* eslint-disable no-console */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import {
-  collection, addDoc, query, orderBy, onSnapshot, where,
+  collection, addDoc, query, onSnapshot, where,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 

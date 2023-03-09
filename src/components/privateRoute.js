@@ -10,5 +10,3 @@ export default function PrivateRoute({ children }) {
     currentUser ? <div className="w-100" style={{ maxWidth: '400px' }}>{children}</div> : <Navigate to="/login" />
   );
 }
-
-{ /* <div className="w-100" style={{ maxWidth: '400px' }}></div> */ }

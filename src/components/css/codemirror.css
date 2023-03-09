@@ -23,3 +23,7 @@
   font-family: monospace;
   font-size: 32px;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}

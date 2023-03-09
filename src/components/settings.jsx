@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 // Change <ToggleButton> to <Form.Check>
 import React, { useState } from 'react';

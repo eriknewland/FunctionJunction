@@ -24,6 +24,7 @@
     "firebase": "^9.17.1",
     "firebase-admin": "^11.5.0",
     "framer-motion": "^10.0.1",
+    "jquery": "^3.6.4",
     "mongoose": "^7.0.0",
     "picoc-js": "^1.0.12",
     "python-shell": "^5.0.0",
