@@ -28,30 +28,28 @@ export default function ForgotPassword() {
   }
 
   return (
-    <>
-      <Card>
-        <Card.Body>
-          <h2 className="text-center mb-4">Password Reset</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-          {message && <Alert variant="success">{message}</Alert>}
-          {/* eslint-disable-next-line react/jsx-no-bind */}
-          <Form onSubmit={handleSubmit}>
-            <Form.Group id="email" style={{ marginTop: '1rem' }}>
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" ref={emailRef} required />
-            </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit" style={{ marginTop: '1rem' }}>Reset Password</Button>
-          </Form>
-          <div className="w-100 text-center mt-3">
-            <Link to="/login">Login</Link>
-          </div>
-        </Card.Body>
-      </Card>
-      <div className="w-100 text-center mt-2">
-        Need an account?
-        {' '}
-        <Link to="/signup">Sign Up</Link>
-      </div>
-    </>
+    <Card>
+      <Card.Body>
+        <h2 className="text-center mb-4">Password Reset</h2>
+        {error && <Alert variant="danger">{error}</Alert>}
+        {message && <Alert variant="success">{message}</Alert>}
+        {/* eslint-disable-next-line react/jsx-no-bind */}
+        <Form onSubmit={handleSubmit}>
+          <Form.Group id="email" style={{ marginTop: '1rem' }}>
+            <Form.Label>Email</Form.Label>
+            <Form.Control type="email" ref={emailRef} required />
+          </Form.Group>
+          <Button disabled={loading} className="w-100" type="submit" style={{ marginTop: '1rem' }}>Reset Password</Button>
+        </Form>
+        <div className="w-100 text-center mt-3">
+          <Link to="/login">Login</Link>
+        </div>
+        <div className="w-100 text-center mt-2">
+          Need an account?
+          {' '}
+          <Link to="/signup">Sign Up</Link>
+        </div>
+      </Card.Body>
+    </Card>
   );
 }
