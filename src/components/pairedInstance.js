@@ -33,9 +33,9 @@ export default function CodeMirrorHomePage() {
   const [problemSolved, setProblemSolved] = useState(null);
   const [problemSolved2, setProblemSolved2] = useState(false);
   const [tracker, setTracker] = useState(0);
+  const [matchedUser, setMatchedUser] = useState(null);
   const socket = io('http://localhost:8000');
   const navigate = useNavigate();
-
   async function incrementWins() {
     const washingtonRef = await doc(db, 'users', currentUser.email);
     console.log(washingtonRef);
@@ -45,7 +45,9 @@ export default function CodeMirrorHomePage() {
       total_wins: increment(1),
     });
   }
-
+  let connected = false;
+  const username = 'Faizan';
+  let room = '';
   // async function incrementWins2() {
   //   const washingtonRef = await doc(db, 'users', 'c6pBk4tJkFCibDbtMQjn');
   //   console.log(washingtonRef);
@@ -57,48 +59,45 @@ export default function CodeMirrorHomePage() {
   // }
 
   useEffect(() => {
-    console.log(db);
-    // incrementWins();
-    // console.log(currentUser)(async () => {
-    //   const q = query(collection(db, 'users'), where('email', '==', currentUser.email));
-    //   onSnapshot(q, (querySnapshot) => {
-    //     querySnapshot.forEach((doc) => {
-    //       updateDoc(doc, {
-    //         wins: increment(1),
-    //       });
-    //     });
-    //   });
-    // })();
-  }, []);
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('connected');
+    socket.on('connect', (data) => { // we are connected, should send our name
+      connected = true;
+      if (username) socket.emit('login', { username });
     });
     socket.on('code-collab', (data) => {
-      // console.log(data);
-      setSrcDocValue(data);
+      room = data.room;
+      console.log('outer data', data); // some method which will show chat window
+      setSrcDocValue(data.code);
     });
-    socket.on('run-ide', (data) => {
-      const regex = /<span>10<\/span>/;
-      const match = data.match(regex);
-      console.log(match);
-      console.log(tracker);
-      document.getElementById('myIframe').srcdoc = `${data}`;
-      if (match) {
-        setTimeout(() => {
-          setProblemSolved(true);
-          incrementWins();
-          // incrementWins2();
-        }, 500);
-      }
-      setProblemSolved(false);
-    });
-    // socket.on('total-users-online', (data) => {
-    //   console.log(`Total users online: ${data}`);
-    //   // setTotalUsersOnline(data);
-    // });
   }, []);
+
+  // useEffect(() => {
+  //   socket.on('connect', () => {
+  //     console.log('connected');
+  //   });
+  //   socket.on('code-collab', (data) => {
+  //     // console.log(data);
+  //     setSrcDocValue(data);
+  //   });
+  //   socket.on('run-ide', (data) => {
+  //     const regex = /<span>10<\/span>/;
+  //     const match = data.match(regex);
+  //     console.log(match);
+  //     console.log(tracker);
+  //     document.getElementById('myIframe').srcdoc = `${data}`;
+  //     if (match) {
+  //       setTimeout(() => {
+  //         setProblemSolved(true);
+  //         incrementWins();
+  //         // incrementWins2();
+  //       }, 500);
+  //     }
+  //     setProblemSolved(false);
+  //   });
+  //   // socket.on('total-users-online', (data) => {
+  //   //   console.log(`Total users online: ${data}`);
+  //   //   // setTotalUsersOnline(data);
+  //   // });
+  // }, []);
 
   const runIDE = () => {
     // const test = `${srcDocValue}sumFunction(5,5)`;
@@ -163,8 +162,10 @@ export default function CodeMirrorHomePage() {
               theme={dracula}
               extensions={[loadLanguage('javascript')]}
               onChange={(value) => {
-                setSrcDocValue(value);
-                socket.emit('code-collab', value);
+                if (connected) {
+                  // setSrcDocValue(value);
+                  socket.emit('code-collab', { code: value });
+                }
               }}
             />
             <iframe
