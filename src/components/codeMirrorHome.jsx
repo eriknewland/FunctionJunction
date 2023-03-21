@@ -55,7 +55,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
     headers: {
       'content-type': 'application/json',
       'Content-Type': 'application/json',
-      'X-RapidAPI-Key': process.env.REACT_APP_JUDGE0_API_KEY,
+      'X-RapidAPI-Key': '44459f35fdmsh06e87ca64c5a14bp196835jsnc2468000a707',
       'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
       useQueryString: true,
     },
@@ -73,7 +73,7 @@ export default function CodeMirrorHomePage({ qeued, setQeued }) {
       fields: '*',
     },
     headers: {
-      'X-RapidAPI-Key': process.env.REACT_APP_JUDGE0_API_KEY,
+      'X-RapidAPI-Key': '44459f35fdmsh06e87ca64c5a14bp196835jsnc2468000a707',
       'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
     },
   };
