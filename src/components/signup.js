@@ -58,38 +58,36 @@ export default function Signup() {
   }
 
   return (
-    <>
-      <Card>
-        <Card.Body>
-          <h2 className="text-center mb-4">Sign Up</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-          {/* eslint-disable-next-line react/jsx-no-bind */}
-          <Form onSubmit={handleSubmit}>
-            <Form.Group id="email" style={{ marginTop: '1rem' }}>
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" ref={emailRef} required />
-            </Form.Group>
-            <Form.Group id="email" style={{ marginTop: '1rem' }}>
-              <Form.Label>Username</Form.Label>
-              <Form.Control type="text" ref={usernameRef} required />
-            </Form.Group>
-            <Form.Group id="password" style={{ marginTop: '1rem' }}>
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" ref={passwordRef} required />
-            </Form.Group>
-            <Form.Group id="password-confirm" style={{ marginTop: '1rem' }}>
-              <Form.Label>Password Confirmation</Form.Label>
-              <Form.Control type="password" ref={passwordConfirmRef} required />
-            </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit" style={{ marginTop: '1rem' }}>Sign Up</Button>
-          </Form>
-        </Card.Body>
-      </Card>
-      <div className="w-100 text-center mt-2">
-        Already have an account?
-        {' '}
-        <Link to="/login">Log In</Link>
-      </div>
-    </>
+    <Card>
+      <Card.Body>
+        <h2 className="text-center mb-4">Sign Up</h2>
+        {error && <Alert variant="danger">{error}</Alert>}
+        {/* eslint-disable-next-line react/jsx-no-bind */}
+        <Form onSubmit={handleSubmit}>
+          <Form.Group id="email" style={{ marginTop: '1rem' }}>
+            <Form.Label>Email</Form.Label>
+            <Form.Control type="email" ref={emailRef} required />
+          </Form.Group>
+          <Form.Group id="email" style={{ marginTop: '1rem' }}>
+            <Form.Label>Username</Form.Label>
+            <Form.Control type="text" ref={usernameRef} required />
+          </Form.Group>
+          <Form.Group id="password" style={{ marginTop: '1rem' }}>
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" ref={passwordRef} required />
+          </Form.Group>
+          <Form.Group id="password-confirm" style={{ marginTop: '1rem' }}>
+            <Form.Label>Password Confirmation</Form.Label>
+            <Form.Control type="password" ref={passwordConfirmRef} required />
+          </Form.Group>
+          <Button disabled={loading} className="w-100" type="submit" style={{ marginTop: '1rem' }}>Sign Up</Button>
+        </Form>
+        <div className="w-100 text-center mt-2">
+          Already have an account?
+          {' '}
+          <Link to="/login">Log In</Link>
+        </div>
+      </Card.Body>
+    </Card>
   );
 }

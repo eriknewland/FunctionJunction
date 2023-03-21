@@ -5,9 +5,14 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import socketIOClient from 'socket.io-client';
+import {
+  collection, query, onSnapshot, where,
+} from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
+import { db } from '../firebase';
 
 export default function Chatroom() {
+  const [firestoreUsername, setFirestoreUsername] = useState('');
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   // const [socket, setSocket] = useState(null);
@@ -18,6 +23,16 @@ export default function Chatroom() {
   // setSocket(socket);
 
   useEffect(() => {
+    const nameQuery = query(collection(db, 'users'), where('email', '==', currentUser.email));
+    onSnapshot(nameQuery, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        setFirestoreUsername(doc.data().username);
+      });
+    });
+  }, [message]);
+
+  useEffect(() => {
+    console.log(firestoreUsername);
     socket.on('connect', () => {
       console.log('connected');
     });
@@ -32,7 +47,7 @@ export default function Chatroom() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    socket.emit('message', `${currentUser.email}:${message}`);
+    socket.emit('message', `${firestoreUsername}:${message}`);
     setMessage('');
   };
 
