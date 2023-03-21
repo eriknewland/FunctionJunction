@@ -46,17 +46,8 @@ export default function CodeMirrorHomePage() {
     });
   }
   let connected = false;
-  const username = 'Faizan';
-  let room = '';
-  // async function incrementWins2() {
-  //   const washingtonRef = await doc(db, 'users', 'c6pBk4tJkFCibDbtMQjn');
-  //   console.log(washingtonRef);
-  //   // Atomically increment the population of the city by 50.
-  //   const res = await updateDoc(washingtonRef, {
-  //     wins: increment(1),
-  //     total_wins: increment(1),
-  //   });
-  // }
+  const username = 'testname123';
+  const room = 'hello-world';
 
   useEffect(() => {
     socket.on('connect', (data) => { // we are connected, should send our name
@@ -64,9 +55,14 @@ export default function CodeMirrorHomePage() {
       if (username) socket.emit('login', { username });
     });
     socket.on('code-collab', (data) => {
-      room = data.room;
-      console.log('outer data', data); // some method which will show chat window
-      setSrcDocValue(data.code);
+      // room = data.room;
+      console.log('outer data', data);
+      setSrcDocValue(data);
+    });
+    socket.on('disconnect', (data) => {
+      socket.on('no-parter', (data) => {
+        eval(data);
+      });
     });
   }, []);
 
@@ -162,10 +158,10 @@ export default function CodeMirrorHomePage() {
               theme={dracula}
               extensions={[loadLanguage('javascript')]}
               onChange={(value) => {
-                if (connected) {
-                  // setSrcDocValue(value);
-                  socket.emit('code-collab', { code: value });
-                }
+                // if (connected) {
+                // setSrcDocValue(value);
+                socket.emit('code-collab', value);
+                // }
               }}
             />
             <iframe

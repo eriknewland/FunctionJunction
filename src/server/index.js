@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
   // console.log(socket);
   // console.log(`User ${socket.id} connected`);
   // console.log(totalUsersOnline.length);
-  // totalUsersOnline.push(socket);
+
   socket.on('login', (data) => {
     names[socket.id] = data.username;
     allUsers[socket.id] = socket;
@@ -54,29 +54,32 @@ io.on('connection', (socket) => {
   });
   socket.emit('total-users-online', totalUsersOnline.length);
   socket.on('code-collab', (data) => {
-    console.log(data);
-    // socket.broadcast.emit('code-collab', data);
-    console.log('socket id:', socket.id);
     const room = rooms[socket.id];
     socket.broadcast.to(room).emit('code-collab', data);
-    // socket.emit('total-users-online', totalUsersOnline.length);
     console.log('room: ', room);
   });
   socket.on('run-ide', (data) => {
-    // console.log(data);
-    socket.broadcast.emit('run-ide', data);
-    // socket.emit('total-users-online', totalUsersOnline.length);
+    console.log('run-ide data: ', data);
+    const room = rooms[socket.id];
+    socket.broadcast.to(room).emit('run-ide', data);
   });
 
   socket.on('message', (data) => {
     socket.broadcast.emit('message', data);
     console.log(data);
   });
-});
-
-// Express Routes
-app.get('/', (req, res) => {
-  res.send('Hello Server');
+  // handle disconnection/leaving
+  socket.on('disconnect', () => {
+    console.log('The server has disconnected!');
+    const room = rooms[socket.id];
+    socket.broadcast.to(room).emit('no-partner', 'alert(\'Your partner has left\')');
+    if (room) {
+      let peerID = room.split('#');
+      peerID = peerID[0] === socket.id ? peerID[1] : peerID[0];
+      // current socket left, add the other one to the queue
+      findPeerForLoneSocket(allUsers[peerID]);
+    }
+  });
 });
 
 console.log('Server running on port 8000');
