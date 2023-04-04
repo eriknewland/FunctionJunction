@@ -4,23 +4,32 @@
 A collaborative in-browser IDE that pairs users to solve algorithm and data-structure problems built over a 3-day hackathon.
 
 
-
+<p align="center">
+  <img src="demo-gif.gif" alt="Collaboration gif">
+</p>
 
 ## Tech Stack
+<p align="center">
+  <b>Client</b><br>
+  <img src="https://img.shields.io/static/v1?style=for-the-badge&message=React&color=222222&logo=React&logoColor=61DAFB&label=" alt="React" />
+  <img src="https://img.shields.io/static/v1?style=for-the-badge&message=React+Router&color=CA4245&logo=React+Router&logoColor=FFFFFF&label=" alt="React Router" />
+  <img src="https://img.shields.io/static/v1?style=for-the-badge&message=CodeMirror&color=D30707&logo=CodeMirror&logoColor=FFFFFF&label=" alt="CodeMirror" />
+  <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Bootstrap&color=7952B3&logo=Bootstrap&logoColor=FFFFFF&label=" alt="Bootstrap" />
+  <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Judge0+API&color=222222&logo=json&logoColor=22e4ac&label=" 
+  alt="Judge0 API" />
+</p>
 
-**Client**
-![React](https://img.shields.io/static/v1?style=for-the-badge&message=React&color=222222&logo=React&logoColor=61DAFB&label=)
-![React Router](https://img.shields.io/static/v1?style=for-the-badge&message=React+Router&color=CA4245&logo=React+Router&logoColor=FFFFFF&label=)
-![CodeMirror](https://img.shields.io/static/v1?style=for-the-badge&message=CodeMirror&color=D30707&logo=CodeMirror&logoColor=FFFFFF&label=)
-![Bootstrap](https://img.shields.io/static/v1?style=for-the-badge&message=Bootstrap&color=7952B3&logo=Bootstrap&logoColor=FFFFFF&label=)
+<p align="center">
+  <b>Server</b><br>
+  <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Node.js&color=339933&logo=Node.js&logoColor=FFFFFF&label=" alt="Node.js" />
+  <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Express&color=000000&logo=Express&logoColor=FFFFFF&label=" alt="Express" />
+  <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Socket.io&color=010101&logo=Socket.io&logoColor=FFFFFF&label=" alt="Socket.io" />
+</p>
 
-**Server**
-![Node.js](https://img.shields.io/static/v1?style=for-the-badge&message=Node.js&color=339933&logo=Node.js&logoColor=FFFFFF&label=)
-![Express](https://img.shields.io/static/v1?style=for-the-badge&message=Express&color=000000&logo=Express&logoColor=FFFFFF&label=)
-![Socket.io](https://img.shields.io/static/v1?style=for-the-badge&message=Socket.io&color=010101&logo=Socket.io&logoColor=FFFFFF&label=)
-
-**Database**
-![Firebase](https://img.shields.io/static/v1?style=for-the-badge&message=Firebase&color=222222&logo=Firebase&logoColor=FFCA28&label=)
+<p align="center">
+  <b>Database</b><br>
+  <img src="https://img.shields.io/static/v1?style=for-the-badge&message=Firebase&color=222222&logo=Firebase&logoColor=FFCA28&label=" alt="Firebase" />
+</p>
 
 ## Environment Variables
 
@@ -81,13 +90,6 @@ In a separate terminal window, navigate into /src/server and run 'nodemon index.
 
 - Add different modes (i.e. competitive, CSS/styling challenges)
 
-
-
-## Screenshots
-
-[![Collaboration gif](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYTNiNDVkODg5YTAxOTYzNjkwM2NkMTVjNGE1YmIzOWMxZWY5MWViMyZjdD1n/8NW3duzvMJqMjAiHw5/giphy-downsized-large.gif)]
-
-<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYTNiNDVkODg5YTAxOTYzNjkwM2NkMTVjNGE1YmIzOWMxZWY5MWViMyZjdD1n/8NW3duzvMJqMjAiHw5/giphy-downsized-large.gif" height=400 width=400>
 
 ## Demo (Youtube)
 
